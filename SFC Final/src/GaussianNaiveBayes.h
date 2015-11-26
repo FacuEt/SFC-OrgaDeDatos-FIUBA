@@ -17,8 +17,8 @@ private:
 	long double evidencia;
 	int cant_feactures;
 	int cant_categories;
-	vector<vector<long double>> media;
-	vector<vector<long double>> varianza;
+	vector< vector<long double> > media;
+	vector< vector<long double> > varianza;
 	vector<long double> prob_por_categoria;
 	vector<int> cant_por_categoria;
 
@@ -26,9 +26,9 @@ private:
 
 public:
 	GaussianNaiveBayes(int cant_de_categorias);
-	bool fit(vector<vector*> X,vector<int>Y);
-	vector<long double> predict(vector<vector*> X);
-	int predict_feacture(vector<vector*> X);
+	bool fit(vector< vector<long double> > X,vector<int> Y);
+	vector<long double> predict(vector<long double> X);
+	long double predict_feacture(vector<long double> X);
 	virtual ~GaussianNaiveBayes();
 };
 

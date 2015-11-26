@@ -8,8 +8,9 @@
 
 #include <iostream>
 using namespace std;
-
+/*
 int main() {
 	cout << "SFC" << endl; // prints SFC
 	return 0;
 }
+*/
