@@ -17,7 +17,6 @@ GaussianNaiveBayes::GaussianNaiveBayes(int cant_de_categorias) {
 	varianza = vector<vector<long double> > (cant_categories);
 	cant_por_categoria = vector<int> (cant_categories);
 	prob_por_categoria = vector<long double> (cant_categories);
-	evidencia = 0;
 }
 
 bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
@@ -43,7 +42,7 @@ bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
 
 				media[category][j] += X[i][j];
 
-				varianza[category][j] += pow(varianza[category][j],2);
+				varianza[category][j] += pow(X[i][j],2);
 
 			}
 			cant_por_categoria[category] += 1;
@@ -55,17 +54,9 @@ bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
 				media[k][j] = media[k][j]/cant_por_categoria[k];
 				varianza[k][j] = varianza[k][j]/cant_por_categoria[k] - pow(media[k][j],2);
 			}
-			prob_por_categoria[k] = cant_por_categoria[k]/cant_total;
+			prob_por_categoria[k] = (cant_por_categoria[k]*1.0f)/cant_total;
 		}
 
-		//calculo evidencia
-		for (int cat = 0; cat < cant_categories; cat++){
-			long double aux = prob_por_categoria[cat];
-			for (int ft = 0;ft < cant_feactures;ft++){
-				aux *= _calculoGaussiano(cat,ft);
-			}
-			evidencia += aux;
-		}
 	}
 	catch (...) {
 		cout << "Error de indices, los datos no son validos" << endl;
@@ -82,7 +73,7 @@ bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
 			cout << "FT " << j << " | " << media[i][j] << endl;
 		}
 	}
-	*/
+
 	cout << "Variaza.." << endl;
 	for (size_t i=0;i< varianza.size();i++){
 		cout << "Categoria.. " << i << endl;
@@ -91,15 +82,15 @@ bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
 		}
 	}
 
-
+	*/
 	return true;
 }
 
 
-long double GaussianNaiveBayes::_calculoGaussiano(int categoria, int feacture){
+long double GaussianNaiveBayes::_calculoGaussiano(int categoria, int feacture, long double new_ft){
 	long double res = 0;
 
-	res = (1/sqrt(2*M_PI*varianza[categoria][feacture]))*exp( -pow((6 - media[categoria][feacture] ),2)/(2*varianza[categoria][feacture]));
+	res = (1/sqrt(2*M_PI*varianza[categoria][feacture]))*exp( -pow((new_ft - media[categoria][feacture] ),2)/(2*varianza[categoria][feacture]));
 
 	return res;
 }
@@ -107,24 +98,49 @@ long double GaussianNaiveBayes::_calculoGaussiano(int categoria, int feacture){
 vector<long double> GaussianNaiveBayes::predict(vector<long double>  X){
 	vector<long double> resultados (cant_categories) ;
 
+	//calculo evidencia
+	long double evidencia = 0;
+	for (int cat = 0; cat < cant_categories; cat++){
+		long double aux = prob_por_categoria[cat];
+		for (int ft = 0;ft < cant_feactures;ft++){
+			aux *= _calculoGaussiano(cat,ft,X[ft]);
+		}
+		evidencia += aux;
+	}
+
+
 	for (int i = 0;i<cant_categories;i++){
 		long double prob = prob_por_categoria[i];
-
 		for (int ft = 0; ft < cant_feactures;ft++){
-			prob*=_calculoGaussiano(i,ft);
+			prob*=_calculoGaussiano(i,ft,X[ft]);
 		}
 
 		prob = prob/evidencia;
 
-		resultados.push_back(prob);
+		resultados[i] = prob;
 	}
 
 	return resultados;
 }
 
+int GaussianNaiveBayes::predict_feacture(vector<long double> X){
+
+	vector<long double> pred = predict(X);
+	int categorie = -1;
+	long double prob_max = 0;
+
+	for (int i = 0;i < cant_categories; i++){
+		if (pred[i] > prob_max){
+			categorie = i;
+			prob_max = pred[i];
+		}
+	}
+
+	return categorie;
+}
+
 GaussianNaiveBayes::~GaussianNaiveBayes() {
 	delete(&cant_feactures);
-	delete( &evidencia);
 	delete(&cant_categories);
 
 	for (size_t j = 0; j < media.size(); j++){

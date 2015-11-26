@@ -31,7 +31,12 @@ void testNaiveBayes() {
 	Y.push_back(Mujer);
 
 	cout << "Entrenar...." << endl;
+
 	clf->fit(train,Y);
+	int predict = clf->predict_feacture(vector<long double> {5.42,130.0,7.0});
+	cout << "Prediccion... " << endl;
+	string cat; if (predict == 0) cat = "Hombre"; else cat = "Mujer";
+	cout << cat << endl;
 
 }
 
