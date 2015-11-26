@@ -6,51 +6,37 @@
  */
 
 #include "lectorCSV.h"
-#include <iostream> //cout, endl
-#include <fstream> //manejo de archivo
-#include <vector>
-#include <string>
-#include <list>
-#include <algorithm>
-#include <iterator>
 
-#include <boost/tokenizer.hpp>
-using namespace std;
-using namespace boost;
 
-lectorCSV::lectorCSV(std::string nombrearchivo) {
+lectorCSV::lectorCSV(string nombrearchivo) {
 		this->nombrearch = nombrearchivo;
-		this->archivo = NULL;
-		this->headerCSV = NULL;
-		this->listaADevolver = NULL;
-
-}
-ifstream lectorCSV::darArchivoAbierto()
-{
-
-	if (!this->archivo.is_open()) return 1; //pifiaste maquinola
-	return archivo;
+		this->headerCSV = string();
 }
 
 void lectorCSV::levantarArchivo()
 {
-	this->archivo(this->nombrearch.c_str());
-	if (!this->archivo.is_open()){
+	this->archivocsv.open(this->nombrearch.c_str(),ifstream::in);
+	if (!this->archivocsv.is_open()){
 		cout << "ERROR AL CARGAR EL CSV" << endl;
 	}
+}
+
+string lectorCSV::devolverNombreArchivo()
+{
+	return this->nombrearch;
 }
 
 list<string> lectorCSV::devolverLineas()
 {
 	string linea;
 	typedef tokenizer<escaped_list_separator<char> > Tokenizador; //lo que va a parsear el csv
-
-	if (!this->archivo == NULL || !this->archivo.is_open())
+	levantarArchivo();
+	if (!this->archivocsv.is_open())
 		{
 		cout << "HAY QUE ABRIR EL ARCHIVO PRIMERO" << endl;
-		return 1; //dale boludo, abri el archivo primero
+		return this->listaADevolver;
 		}
-	while (getline(this->archivo,linea))
+	while (getline(this->archivocsv,linea))
 	{
 		Tokenizador tok(linea);
 		this->listaADevolver.assign(tok.begin(),tok.end());
@@ -59,18 +45,18 @@ list<string> lectorCSV::devolverLineas()
 }
 
 void lectorCSV::separarHeader(){
-	if (!this->headerCSV == NULL){
+	if (!this->headerCSV.empty()){
 		cout << "Ya separaste el header lince" << endl;
 		return;
 	}
-	this->headerCSV = this->listaADevolver.pop_front();
+
 }
 string lectorCSV::devolverHeader(){
 	return this->headerCSV;
 }
 
 lectorCSV::~lectorCSV() {
-	this->archivo.close();
+	this->archivocsv.close();
 	this->listaADevolver.clear();
 }
 

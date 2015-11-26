@@ -7,22 +7,32 @@
 
 #ifndef LECTORCSV_H_
 #define LECTORCSV_H_
-#include <iostream>
-#include <fstream>;
+#include <iostream> //cout, endl
+#include <fstream> //manejo de archivo
+#include <vector>
+#include <string>
+#include <list>
+#include <algorithm>
+#include <iterator>
+
+#include <boost/tokenizer.hpp>
+using namespace std;
+using namespace boost;
 
 using namespace std;
 class lectorCSV {
 public:
-	lectorCSV(std::string nombrearchivo);
+	lectorCSV(string nombrearchivo);
 	virtual ~lectorCSV();
-	ifstream darArchivoAbierto();
+
+	string devolverNombreArchivo();
 	list<string> devolverLineas();
 	void levantarArchivo();
 	string devolverHeader();
 	void separarHeader();
 private:
-	std::string nombrearch;
-	ifstream archivo;
+	string nombrearch;
+	ifstream archivocsv;
 	string headerCSV;
 	list<string> listaADevolver;
 };
