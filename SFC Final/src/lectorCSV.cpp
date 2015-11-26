@@ -36,10 +36,12 @@ list<string> lectorCSV::devolverLineas()
 		cout << "HAY QUE ABRIR EL ARCHIVO PRIMERO" << endl;
 		return this->listaADevolver;
 		}
+	list<string>::iterator it = this->listaADevolver.begin();
 	while (getline(this->archivocsv,linea))
 	{
 		Tokenizador tok(linea);
-		this->listaADevolver.assign(tok.begin(),tok.end());
+		this->listaADevolver.insert(it,tok.begin(),tok.end());
+
 	}
 	return this->listaADevolver;
 }
