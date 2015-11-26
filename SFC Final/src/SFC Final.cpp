@@ -7,9 +7,13 @@
 //============================================================================
 
 #include <iostream>
-using namespace std;
+
+#include "test/test.h"
+
+
 
 int main() {
-	cout << "SFC" << endl; // prints SFC
+	testNaiveBayes();
 	return 0;
 }
+
