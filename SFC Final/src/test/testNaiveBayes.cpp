@@ -1,10 +1,7 @@
-#include "GaussianNaiveBayes.h"
-#include <iostream>
-#include <vector>
+#include "test.h"
 
-using namespace std;
 
-int main(int argc, char **argv) {
+void testNaiveBayes() {
 
 	cout << "SFC FME" << endl;
 
@@ -36,7 +33,8 @@ int main(int argc, char **argv) {
 	cout << "Entrenar...." << endl;
 	clf->fit(train,Y);
 
-
-
-	return 0;
 }
+
+
+
+
