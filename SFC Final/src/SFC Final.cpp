@@ -13,15 +13,6 @@
 using namespace std;
 
 int main() {
-	lectorCSV CSVparser("pruebaparser.csv");
-	list<string> prueba;
-	cout << CSVparser.devolverNombreArchivo() << endl;
-	prueba = CSVparser.devolverLineas();
-	cout << prueba.size() << endl;
-	for (list<string>::iterator it = prueba.begin(); it != prueba.end();++it)
-	{
-		cout << *it ;
-	}
-	return 0;
+
 }
 

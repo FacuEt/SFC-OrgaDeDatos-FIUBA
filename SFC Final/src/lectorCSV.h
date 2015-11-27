@@ -26,7 +26,7 @@ public:
 	virtual ~lectorCSV();
 
 	string devolverNombreArchivo();
-	list<string> devolverLineas();
+	vector<vector<string>> devolverLineas();
 	void levantarArchivo();
 	string devolverHeader();
 	void separarHeader();
@@ -34,7 +34,7 @@ private:
 	string nombrearch;
 	ifstream archivocsv;
 	string headerCSV;
-	list<string> listaADevolver;
+	vector<vector<string>> listaADevolver;
 };
 
 #endif /* LECTORCSV_H_ */
