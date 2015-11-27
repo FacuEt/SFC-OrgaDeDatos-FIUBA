@@ -10,7 +10,6 @@
 
 lectorCSV::lectorCSV(string nombrearchivo) {
 		this->nombrearch = nombrearchivo;
-		this->headerCSV = string();
 }
 
 void lectorCSV::levantarArchivo()
@@ -26,8 +25,9 @@ string lectorCSV::devolverNombreArchivo()
 	return this->nombrearch;
 }
 
-list<string> lectorCSV::devolverLineas()
+vector<vector<string>> lectorCSV::devolverLineas()
 {
+
 	string linea;
 	typedef tokenizer<escaped_list_separator<char> > Tokenizador; //lo que va a parsear el csv
 	levantarArchivo();
@@ -36,12 +36,18 @@ list<string> lectorCSV::devolverLineas()
 		cout << "HAY QUE ABRIR EL ARCHIVO PRIMERO" << endl;
 		return this->listaADevolver;
 		}
-	list<string>::iterator it = this->listaADevolver.begin();
+	//vector<vector<string> >::iterator it = this->listaADevolver.begin();
 	while (getline(this->archivocsv,linea))
 	{
-		Tokenizador tok(linea);
-		this->listaADevolver.insert(it,tok.begin(),tok.end());
+		cout << "ENTRE AL WHILE" << endl;
 
+		Tokenizador tok(linea);
+		vector<string> vector_token;
+		for(Tokenizador::iterator tok_it = tok.begin();tok_it != tok.end();++tok_it)
+		{
+			vector_token.push_back(*tok_it);
+		}
+		this->listaADevolver.push_back(vector_token);
 	}
 	return this->listaADevolver;
 }
@@ -50,10 +56,12 @@ void lectorCSV::separarHeader(){
 	if (!this->headerCSV.empty()){
 		cout << "Ya separaste el header lince" << endl;
 		return;
+	this->headerCSV = this->listaADevolver[0];
+	this->listaADevolver.erase(this->listaADevolver.begin());
 	}
 
 }
-string lectorCSV::devolverHeader(){
+vector<string> lectorCSV::devolverHeader(){
 	return this->headerCSV;
 }
 

@@ -18,6 +18,6 @@ using namespace std;
 
 void testNaiveBayes();
 void testKMeans();
-
+void testParser();
 
 #endif /* TESTNAIVEBAYES_H_ */
