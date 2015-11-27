@@ -29,7 +29,7 @@ vector<vector<string>> lectorCSV::devolverLineas()
 {
 
 	string linea;
-	typedef tokenizer<escaped_list_separator<char> > Tokenizador; //lo que va a parsear el csv
+	 //lo que va a parsear el csv
 	levantarArchivo();
 	if (!this->archivocsv.is_open())
 		{
@@ -39,8 +39,6 @@ vector<vector<string>> lectorCSV::devolverLineas()
 	//vector<vector<string> >::iterator it = this->listaADevolver.begin();
 	while (getline(this->archivocsv,linea))
 	{
-		cout << "ENTRE AL WHILE" << endl;
-
 		Tokenizador tok(linea);
 		vector<string> vector_token;
 		for(Tokenizador::iterator tok_it = tok.begin();tok_it != tok.end();++tok_it)
@@ -63,6 +61,41 @@ void lectorCSV::separarHeader(){
 }
 vector<string> lectorCSV::devolverHeader(){
 	return this->headerCSV;
+}
+
+vector<int> lectorCSV::procesarFecha(string fechaParaProcesar){
+	vector<int> fechaProcesada;
+	//1er parametro dice que se suprime. 2do parametro los char que muestra
+	//3er parametro si muestro o no casos en donde aparece por ej ,, eso tiraria
+	//un str vacio
+	char_separator<char> sep{" "};
+	char_separator<char> sep_primer{"-"};
+	char_separator<char> sep_segundo{":"};
+	Tokenizadorfecha tok{fechaParaProcesar,sep};
+	vector<string> fechaTrabajada;
+	vector<string> fechaParseada; //2015-11-27 15:38:27
+	string primeraParte; //2015-11-27
+	string segundaParte; // 15:38:27
+	for (const auto &t : tok){
+		fechaParseada.push_back(t);
+	}
+	vector<string>::iterator it = fechaParseada.begin();
+	primeraParte = *it;
+	++it;
+	segundaParte = *it;
+	Tokenizadorfecha tok2{primeraParte,sep_primer};
+	for (const auto &t : tok2){
+		fechaTrabajada.push_back(t); // 2015 , 11 , 27
+	}
+	Tokenizadorfecha tok3{segundaParte,sep_segundo};
+	for (const auto &t : tok3){
+		fechaTrabajada.push_back(t); // 2015 , 11 , 27 , 15 , 38 , 27
+	}
+
+	for (int i = 0; i < 4; i++){
+		fechaProcesada.push_back(atoi(fechaTrabajada[i].c_str()));
+	}
+	return fechaProcesada;
 }
 
 lectorCSV::~lectorCSV() {

@@ -18,8 +18,9 @@
 #include <boost/tokenizer.hpp>
 using namespace std;
 using namespace boost;
+typedef tokenizer<escaped_list_separator<char> > Tokenizador;
+typedef tokenizer<char_separator<char> > Tokenizadorfecha;
 
-using namespace std;
 class lectorCSV {
 public:
 	lectorCSV(string nombrearchivo);
@@ -29,6 +30,7 @@ public:
 	vector<vector<string>> devolverLineas();
 	void levantarArchivo();
 	vector<string> devolverHeader();
+	vector<int> procesarFecha(string fechaParaProcesar);
 	void separarHeader();
 private:
 	string nombrearch;
