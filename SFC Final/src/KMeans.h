@@ -29,6 +29,7 @@ private:
 	int max_iterations;
 	int	nro_clusters;
 	float max_tolerancia;
+	bool debug;
 	vector<Punto*> centroides;
 
 	void _initCentroides(vector<Punto*> puntos);
@@ -36,7 +37,7 @@ private:
 	void _recalcularCentroides(vector<Punto*> puntos);
 
 public:
-	KMeans( int clusters ,int max_iter = 300, float tolerancia = 0.00001 );
+	KMeans( int clusters ,int max_iter = 300, float tolerancia = 0.00001, bool debug = false );
 
 	void fit( vector<Punto*> puntos);
 	int predict( Punto* punto );

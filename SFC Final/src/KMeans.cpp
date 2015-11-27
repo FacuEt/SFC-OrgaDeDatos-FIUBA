@@ -7,10 +7,12 @@
 
 #include "KMeans.h"
 
-KMeans::KMeans(int clusters ,int max_iter, float tolerancia) {
+KMeans::KMeans(int clusters ,int max_iter, float tolerancia, bool Dodebug) {
 	max_iterations = max_iter;
 	max_tolerancia = tolerancia;
 	nro_clusters = clusters;
+	debug = Dodebug;
+
 }
 
 float distance(Punto* p1,Punto* p2){
@@ -31,6 +33,8 @@ void KMeans::_initCentroides (vector<Punto*> puntos){
 	centroides.push_back( pRandom );
 
 	for (int t = 0; t < nro_clusters - 1; t++){
+		if (debug)
+			printf("KMeans[DEBUG]: random cluster %d\n",t+1);
 
 		//Calcular las distancias de cada Punto con los centroides y quedarnos con el minimo
 		vector<float> dist;
@@ -107,8 +111,8 @@ void KMeans::_recalcularCentroides(vector<Punto*> puntos){
 	for (int i = 0; i < (int)centroides.size(); i++){
 		//Si se cuenta el centroide para el promedio  empieza en 1
 		int cantidad = 1;
-		float sumX = centroides[i]->x;
-		float sumY = centroides[i]->y;
+		long double sumX = centroides[i]->x;
+		long double sumY = centroides[i]->y;
 
 		for (int j = 0; j < (int)centDePunto.size(); j++){
 			//Centroide i => el Punto j esta en el cluster i
@@ -129,11 +133,17 @@ void KMeans::_recalcularCentroides(vector<Punto*> puntos){
 }
 
 void KMeans::fit(vector<Punto*> puntos){
+	if ((int)puntos.size() <= nro_clusters){
+		printf("ERROR: Imposible hacer KMeans, agrega mas datos o reduce el numero de clusters");
+		return;
+	}
 
 	_initCentroides(puntos);
 
 
 	for (int i = 0; i < max_iterations; i++){
+		if (debug)
+			printf("KMeans[DEBUG]: iteration %d\n",i+1);
 		//Clono los centroides (hago Back UP)
 
 		vector<Punto*> centroides_bak;
@@ -165,8 +175,9 @@ void KMeans::viewCentroides(){
 		printf( "No hay centroides. Intenta con fit" );
 		return;
 	}
+
 	for (int x = 0; x < (int)centroides.size(); x++){
-		printf( "Centroide %i = (%Lf,%Lf) \n",x+1, centroides[x]->x, centroides[x]->y);
+		printf( "%d,%Lf,%Lf\n",x,centroides[x]->x, centroides[x]->y);
 	}
 }
 

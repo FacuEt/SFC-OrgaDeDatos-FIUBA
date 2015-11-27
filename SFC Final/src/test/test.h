@@ -12,6 +12,8 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
+#include "../lectorCSV.h"
 #include "../GaussianNaiveBayes.h"
 #include "../features.h"
 #include "../KMeans.h"
@@ -22,3 +24,4 @@ void testKMeans();
 void testParser();
 
 #endif /* TESTNAIVEBAYES_H_ */
+
