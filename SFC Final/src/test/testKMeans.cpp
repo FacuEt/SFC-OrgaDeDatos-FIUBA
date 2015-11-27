@@ -18,6 +18,10 @@ void testKMeans(){
 	for (size_t i = 0; i < puntos.size(); i++){
 		cout << "P: (" << puntos[i]->x << "," << puntos[i]->y << ") \t ->";
 		cout << clf->predict(puntos[i]) << endl;
+
+		delete puntos[i];
 	}
+	puntos.clear();
+	delete clf;
 
 }

@@ -129,14 +129,15 @@ void KMeans::_recalcularCentroides(vector<Punto*> puntos){
 }
 
 void KMeans::fit(vector<Punto*> puntos){
-	//Asignar a cada punto el centroide mas cercano
-	//Recalcular centroides
 
 	_initCentroides(puntos);
 
+
 	for (int i = 0; i < max_iterations; i++){
 		//Clono los centroides (hago Back UP)
+
 		vector<Punto*> centroides_bak;
+
 		for (int x = 0; x < (int)centroides.size(); x++){
 			Punto* p = new Punto{centroides[x]->x, centroides[x]->y};
 			centroides_bak.push_back(p);
@@ -146,14 +147,16 @@ void KMeans::fit(vector<Punto*> puntos){
 
 
 		float shift = _squared_norm(centroides_bak,centroides);
-		if (shift <= max_tolerancia)
+		if (shift <= max_tolerancia){
+			for (int i = 0; i < (int)centroides_bak.size(); i++){
+				delete centroides_bak[i];
+			}
 			break;
+		}
 
-		//Elimino el vector BAK (Libero memoria)
-		//for (size_t j = 0; j < centroides_bak.size(); i++){
-		//	delete centroides_bak[j];
-		//}
-		//centroides.clear();
+		for (int i = 0; i < (int)centroides_bak.size(); i++){
+			delete centroides_bak[i];
+		}
 	}
 }
 
@@ -172,6 +175,9 @@ int KMeans::predict(Punto* punto){
 }
 
 KMeans::~KMeans() {
-	// TODO Auto-generated destructor stub
+	for (int i = 0; i < (int)centroides.size(); i++){
+		delete centroides[i];
+	}
+	centroides.clear();
 }
 
