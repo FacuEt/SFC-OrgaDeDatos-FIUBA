@@ -9,6 +9,7 @@
 #define FEACTURES_H_
 
 #include <map>
+#include <vector>
 
 //train
 #define POS_DATE 0
