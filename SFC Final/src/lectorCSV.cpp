@@ -10,7 +10,6 @@
 
 lectorCSV::lectorCSV(string nombrearchivo) {
 		this->nombrearch = nombrearchivo;
-		this->headerCSV = string();
 }
 
 void lectorCSV::levantarArchivo()
@@ -57,10 +56,12 @@ void lectorCSV::separarHeader(){
 	if (!this->headerCSV.empty()){
 		cout << "Ya separaste el header lince" << endl;
 		return;
+	this->headerCSV = this->listaADevolver[0];
+	this->listaADevolver.erase(this->listaADevolver.begin());
 	}
 
 }
-string lectorCSV::devolverHeader(){
+vector<string> lectorCSV::devolverHeader(){
 	return this->headerCSV;
 }
 

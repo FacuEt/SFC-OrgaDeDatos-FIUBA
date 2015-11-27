@@ -28,12 +28,12 @@ public:
 	string devolverNombreArchivo();
 	vector<vector<string>> devolverLineas();
 	void levantarArchivo();
-	string devolverHeader();
+	vector<string> devolverHeader();
 	void separarHeader();
 private:
 	string nombrearch;
 	ifstream archivocsv;
-	string headerCSV;
+	vector<string> headerCSV;
 	vector<vector<string>> listaADevolver;
 };
 

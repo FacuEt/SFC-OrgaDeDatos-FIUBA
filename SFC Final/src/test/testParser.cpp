@@ -1,5 +1,5 @@
 #include "test.h"
-
+#include "../lectorCSV.h"
 void testParser(){
 
 
