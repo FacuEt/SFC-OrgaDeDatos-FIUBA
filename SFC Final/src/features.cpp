@@ -1,15 +1,15 @@
 /*
- * feactures.cpp
+ * features.cpp
  *
  *  Created on: 27/11/2015
  *      Author: facu
  */
 
-#include "feactures.h"
+#include "features.h"
 
 namespace std {
 
-feactures::feactures() {
+features::features() {
 
 	//ARSON,ASSAULT,BAD CHECKS,BRIBERY,BURGLARY,DISORDERLY CONDUCT,DRIVING UNDER THE INFLUENCE,DRUG/NARCOTIC,DRUNKENNESS,EMBEZZLEMENT,EXTORTION,FAMILY OFFENSES,FORGERY/COUNTERFEITING,FRAUD,GAMBLING,KIDNAPPING,LARCENY/THEFT,LIQUOR LAWS,LOITERING,MISSING PERSON,NON-CRIMINAL,OTHER OFFENSES,PORNOGRAPHY/OBSCENE MAT,PROSTITUTION,RECOVERED VEHICLE,ROBBERY,RUNAWAY,SECONDARY CODES,SEX OFFENSES FORCIBLE,SEX OFFENSES NON FORCIBLE,STOLEN PROPERTY,SUICIDE,SUSPICIOUS OCC,TREA,TRESPASS,VANDALISM,VEHICLE THEFT,WARRANTS,WEAPON LAWS
 	categorias["ARSON"] = 0;
@@ -56,20 +56,24 @@ feactures::feactures() {
 }
 
 
-vector<vector<long double> > feactures::transform_feacture(vector<vector<string> > X, bool Test){
+vector<vector<long double> > features::transform_feacture(vector<vector<string> > X, bool Test){
 	vector<vector<long double> >resultado;
 
 	for(size_t i=0; i< X.size();i++){
 		//por cada linea
 		vector<long double> linea;
-		//linea.push_back(_procesarDate(X[i][POS_DATE]));
+		linea.push_back(_procesarDate(X[i][POS_DATE]));
+		linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
+		linea.push_back(_procesarDistrict(X[i][POS_DISTRICT]));
+		linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
+		linea.push_back(_procesarXY(X[i][POS_X],X[i][POS_Y]));
 
 	}
 
 	return resultado;
 }
 
-vector<int> feactures::transform_categories(vector<vector<string> > X){
+vector<int> features::transform_categories(vector<vector<string> > X){
 	vector<int> resultado;
 
 	for (size_t i = 0; i < X.size(); i++){
@@ -79,7 +83,7 @@ vector<int> feactures::transform_categories(vector<vector<string> > X){
 	return resultado;
 }
 
-feactures::~feactures() {
+features::~features() {
 	// TODO Auto-generated destructor stub
 }
 

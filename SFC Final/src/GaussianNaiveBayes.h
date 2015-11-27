@@ -14,7 +14,7 @@ namespace std {
 
 class GaussianNaiveBayes {
 private:
-	int cant_feactures;
+	int cant_features;
 	int cant_categories;
 	vector< vector<long double> > media;
 	vector< vector<long double> > varianza;

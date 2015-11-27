@@ -11,7 +11,7 @@
 namespace std {
 
 GaussianNaiveBayes::GaussianNaiveBayes(int cant_de_categorias) {
-	cant_feactures = 0;
+	cant_features = 0;
 	cant_categories = cant_de_categorias;
 	media = vector<vector<long double> > (cant_categories);
 	varianza = vector<vector<long double> > (cant_categories);
@@ -21,11 +21,11 @@ GaussianNaiveBayes::GaussianNaiveBayes(int cant_de_categorias) {
 
 bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
 	try{
-		cant_feactures = X[0].size();
+		cant_features = X[0].size();
 
 		for (int i = 0;i<cant_categories;i++){
-			media[i] = vector<long double> (cant_feactures);
-			varianza[i] = vector<long double> (cant_feactures);
+			media[i] = vector<long double> (cant_features);
+			varianza[i] = vector<long double> (cant_features);
 		}
 
 		//categoria tiene que ser un numero entero
@@ -37,7 +37,7 @@ bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
 			//por cada fila
 			category = Y[i];
 
-			for(int j = 0; j < cant_feactures; j++) {
+			for(int j = 0; j < cant_features; j++) {
 				//por cada columna
 
 				media[category][j] += X[i][j];
@@ -50,7 +50,7 @@ bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
 		}
 
 		for (int k = 0;k<cant_categories;k++){
-			for (int j = 0; j<cant_feactures; j++){
+			for (int j = 0; j<cant_features; j++){
 				media[k][j] = media[k][j]/cant_por_categoria[k];
 				varianza[k][j] = varianza[k][j]/cant_por_categoria[k] - pow(media[k][j],2);
 			}
@@ -69,7 +69,7 @@ bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
 	cout << "Media.." << endl;
 	for (size_t i=0;i< media.size();i++){
 		cout << "Categoria.. " << i << endl;
-		for (int j = 0; j< cant_feactures;j++){
+		for (int j = 0; j< cant_features;j++){
 			cout << "FT " << j << " | " << media[i][j] << endl;
 		}
 	}
@@ -102,7 +102,7 @@ vector<long double> GaussianNaiveBayes::predict(vector<long double>  X){
 	long double evidencia = 0;
 	for (int cat = 0; cat < cant_categories; cat++){
 		long double aux = prob_por_categoria[cat];
-		for (int ft = 0;ft < cant_feactures;ft++){
+		for (int ft = 0;ft < cant_features;ft++){
 			aux *= _calculoGaussiano(cat,ft,X[ft]);
 		}
 		evidencia += aux;
@@ -111,7 +111,7 @@ vector<long double> GaussianNaiveBayes::predict(vector<long double>  X){
 
 	for (int i = 0;i<cant_categories;i++){
 		long double prob = prob_por_categoria[i];
-		for (int ft = 0; ft < cant_feactures;ft++){
+		for (int ft = 0; ft < cant_features;ft++){
 			prob*=_calculoGaussiano(i,ft,X[ft]);
 		}
 
@@ -140,7 +140,7 @@ int GaussianNaiveBayes::predict_feacture(vector<long double> X){
 }
 
 GaussianNaiveBayes::~GaussianNaiveBayes() {
-	delete(&cant_feactures);
+	delete(&cant_features);
 	delete(&cant_categories);
 
 	for (size_t j = 0; j < media.size(); j++){

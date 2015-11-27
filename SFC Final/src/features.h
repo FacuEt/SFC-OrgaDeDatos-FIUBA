@@ -1,12 +1,12 @@
 /*
- * feactures.h
+ * features.h
  *
  *  Created on: 27/11/2015
  *      Author: facu
  */
 
-#ifndef FEACTURES_H_
-#define FEACTURES_H_
+#ifndef FEATURES_H_
+#define FEATURES_H_
 
 #include <map>
 #include <vector>
@@ -33,17 +33,23 @@
 
 namespace std {
 
-class feactures {
+class features {
 private:
 	map<string,int> categorias;
 
+	long double _procesarDate(string date);
+	long double _procesarDayOfWeek(string day);
+	long double _procesarDistrict(string district);
+	long double _procesarAdress(string adress);
+	long double _procesarXY(string X,string Y);
+
 public:
-	feactures();
+	features();
 	vector<vector<long double> > transform_feacture(vector<vector<string> > X, bool Test = false);
 	vector<int> transform_categories(vector<vector<string> > X);
-	virtual ~feactures();
+	virtual ~features();
 };
 
 } /* namespace std */
 
-#endif /* FEACTURES_H_ */
+#endif /* FEATURES_H_ */
