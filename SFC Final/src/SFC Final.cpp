@@ -13,6 +13,7 @@
 using namespace std;
 
 int main() {
+	testParser();
 	/*
 		//leemos el train
 		lectorCSV CSVparser("train.csv");

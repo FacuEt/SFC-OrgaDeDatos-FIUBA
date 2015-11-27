@@ -13,6 +13,7 @@
 #include <iostream>
 #include <vector>
 #include "../GaussianNaiveBayes.h"
+#include "../features.h"
 #include "../KMeans.h"
 using namespace std;
 

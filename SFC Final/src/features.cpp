@@ -52,24 +52,108 @@ features::features() {
 	categorias["WARRANTS"] = 37;
 	categorias["WEAPON LAWS"] = 38;
 
+	DayOfWeek["Monday"] = 0;
+	DayOfWeek["Tuesday"] = 1;
+	DayOfWeek["Wednesday"] = 2;
+	DayOfWeek["Thursday"] = 3;
+	DayOfWeek["Friday"] = 4;
+	DayOfWeek["Saturday"] = 5;
+	DayOfWeek["Sunday"] = 6;
+
+	District["NORTHERN"] = 0;
+	District["PARK"] = 1;
+	District["INGLESIDE"] = 2;
+	District["BAYVIEW"] = 3;
+	District["RICHMOND"] = 4;
+	District["CENTRAL"] = 5;
+	District["TARAVAL"] = 6;
+	District["TENDERLOIN"] = 7;
+	District["MISSION"] = 8;
+	District["SOUTHERN"] = 9;
 
 }
 
+long double features::_procesarDayOfWeek(string day){
+	return double(DayOfWeek[day]);
+}
+long double features::_procesarDistrict(string district){
+	return double(District[district]);
+}
+
+long double features::_procesarXY(string X,string Y){
+	//aca Kmeans;
+	return 1.0;
+}
+
+vector<long double> features::_procesarDate(string date){
+	vector<long double> fecha;
+	/*
+	INFOS:
+		-FORMATO: ANIO-MES-DIA HS:MIN:SG
+		-RANGO ANIOS = (2015,2003)
+		-SG es siempre 00
+
+	*/
+	string aux;
+	for ( string::iterator it=date.begin(); it!=date.end(); ++it){
+
+		//anio-mes-dia
+		if (strcmp(&*it,"-") || strcmp(&*it," ")){
+			fecha.push_back(stod(aux));
+			aux.clear();
+		}
+		else if (strcmp(&*it,":")){
+			fecha.push_back(stod(aux));
+			break;
+		}
+
+		aux.push_back(*it);
+	}
+
+	return fecha;
+}
 
 vector<vector<long double> > features::transform_feacture(vector<vector<string> > X, bool Test){
 	vector<vector<long double> >resultado;
 
-	for(size_t i=0; i< X.size();i++){
-		//por cada linea
-		vector<long double> linea;
-		linea.push_back(_procesarDate(X[i][POS_DATE]));
-		linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
-		linea.push_back(_procesarDistrict(X[i][POS_DISTRICT]));
-		linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
-		linea.push_back(_procesarXY(X[i][POS_X],X[i][POS_Y]));
+	if (!Test){
+		for(size_t i=0; i< X.size();i++){
+			//por cada linea
+			vector<long double> linea;
 
+			vector<long double> date = _procesarDate(X[i][POS_DATE]);
+			for(size_t j = 0; i < date.size(); j++){
+				linea.push_back(date[j]);
+			}
+
+			linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
+			linea.push_back(_procesarDistrict(X[i][POS_DISTRICT]));
+			//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
+			linea.push_back(_procesarXY(X[i][POS_X],X[i][POS_Y]));
+
+			resultado.push_back(linea);
+		}
 	}
 
+	else{
+		for(size_t i=0; i< X.size();i++){
+			//por cada linea
+			vector<long double> linea;
+
+			vector<long double> date = _procesarDate(X[i][POS_tDATE]);
+			for(size_t j = 0; i < date.size(); j++){
+				linea.push_back(date[j]);
+				cout << date[j] << endl ;
+			}
+
+			linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
+			linea.push_back(_procesarDistrict(X[i][POS_tDISTRICT]));
+			//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
+			linea.push_back(_procesarXY(X[i][POS_tX],X[i][POS_tY]));
+
+			resultado.push_back(linea);
+		}
+	}
 	return resultado;
 }
 

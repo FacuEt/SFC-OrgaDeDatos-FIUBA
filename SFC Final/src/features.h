@@ -10,6 +10,9 @@
 
 #include <map>
 #include <vector>
+#include <cstring>
+#include <string>
+#include <iostream>
 
 //train
 #define POS_DATE 0
@@ -36,8 +39,10 @@ namespace std {
 class features {
 private:
 	map<string,int> categorias;
+	map<string,int> DayOfWeek;
+	map<string,int> District;
 
-	long double _procesarDate(string date);
+	vector<long double> _procesarDate(string date);
 	long double _procesarDayOfWeek(string day);
 	long double _procesarDistrict(string district);
 	long double _procesarAdress(string adress);
