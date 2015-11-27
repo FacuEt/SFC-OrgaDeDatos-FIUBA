@@ -13,6 +13,7 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+#include "KMeans.h"
 
 //train
 #define POS_DATE 0
@@ -41,6 +42,7 @@ private:
 	map<string,int> categorias;
 	map<string,int> DayOfWeek;
 	map<string,int> District;
+	KMeans* kmeans;
 
 	vector<long double> _procesarDate(string date);
 	long double _procesarDayOfWeek(string day);
@@ -49,7 +51,7 @@ private:
 	long double _procesarXY(string X,string Y);
 
 public:
-	features();
+	features(KMeans* un_kmeans);
 	vector<vector<long double> > transform_feacture(vector<vector<string> > X, bool Test = false);
 	vector<int> transform_categories(vector<vector<string> > X);
 	virtual ~features();

@@ -123,7 +123,7 @@ vector<long double> GaussianNaiveBayes::predict(vector<long double>  X){
 	return resultados;
 }
 
-int GaussianNaiveBayes::predict_feacture(vector<long double> X){
+int GaussianNaiveBayes::predict_category(vector<long double> X){
 
 	vector<long double> pred = predict(X);
 	int categorie = -1;

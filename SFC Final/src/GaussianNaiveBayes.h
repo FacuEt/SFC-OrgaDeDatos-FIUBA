@@ -27,7 +27,7 @@ public:
 	GaussianNaiveBayes(int cant_de_categorias);
 	bool fit(vector< vector<long double> > X,vector<int> Y);
 	vector<long double> predict(vector<long double> X);
-	int predict_feacture(vector<long double> X);
+	int predict_category(vector<long double> X);
 	virtual ~GaussianNaiveBayes();
 };
 

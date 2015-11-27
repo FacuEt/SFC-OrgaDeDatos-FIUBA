@@ -10,6 +10,8 @@
 #include "test/test.h"
 #include "lectorCSV.h"
 
+#define CANT_CENTROIDES 300
+
 using namespace std;
 
 int main() {
@@ -17,14 +19,22 @@ int main() {
 	/*
 		//leemos el train
 		lectorCSV CSVparser("train.csv");
+		vector< vector<string> > train = CSVparser.devolverLineas();
 		int cantidad_de_categorias = 32;
 
 		GaussianNaiveBayes* clf = new GaussianNaiveBayes(cantidad_de_categorias);
 
 		//creamos las feactures para entrenar
 
-		vector<vector<long double> > train_procesado;
-		vector<int> categorias;
+		//Entrenamos Kmeans
+		Kmeans* kmeans = new Kmeans(CANT_CENTROIDES);
+
+		//procesamos features
+
+		features * ft = new features(kmeans);
+
+		vector<vector<long double> > train_procesado = ft->transform_feacture(train);
+		vector<int> categorias = ft->transform_categories(train);
 
 		//entrenamos
 		clf->fit(train_procesado,categorias);
