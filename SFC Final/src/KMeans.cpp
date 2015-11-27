@@ -7,7 +7,7 @@
 
 #include "KMeans.h"
 
-KMeans::KMeans(int clusters ,int max_iter = 300, float tolerancia = 0.0001) {
+KMeans::KMeans(int clusters ,int max_iter, float tolerancia) {
 	max_iterations = max_iter;
 	max_tolerancia = tolerancia;
 	nro_clusters = clusters;
@@ -24,9 +24,13 @@ float distance(Punto* p1,Punto* p2){
 void KMeans::_initCentroides (vector<Punto*> puntos){
 	//Elegir un punto cualquiera al azar como centroide
 	vector<int> iCentroidesEnPuntos;
-	iCentroidesEnPuntos.push_back( rand() % puntos.size() );
 
-	for (int t = 0; t < nro_clusters; t++){
+	int random = rand() % puntos.size();
+	iCentroidesEnPuntos.push_back( random );
+	Punto* pRandom = new Punto{puntos[random]->x,puntos[random]->y};
+	centroides.push_back( pRandom );
+
+	for (int t = 0; t < nro_clusters - 1; t++){
 
 		//Calcular las distancias de cada Punto con los centroides y quedarnos con el minimo
 		vector<float> dist;
@@ -54,18 +58,74 @@ void KMeans::_initCentroides (vector<Punto*> puntos){
 		for (int k = 1; k < (int)dist.size(); k++ ){
 				float probK = dist[k]/sumTotal;
 				if (probK > probMax){
-					probMax = probK;
-					posMax = k;
+					if ( find(iCentroidesEnPuntos.begin(),iCentroidesEnPuntos.end(),k) == iCentroidesEnPuntos.end() ){
+						//Es max y ya no es centroide
+						probMax = probK;
+						posMax = k;
+					}
 				}
 		}
 		iCentroidesEnPuntos.push_back( posMax );
+
+		//Aca puedo elegir el max prob el uno random
+		Punto* pMaxProb = new Punto{puntos[posMax]->x,puntos[posMax]->y};
+		centroides.push_back( pMaxProb );
 
 	}
 
 }
 
 float _squared_norm(vector<Punto*> a, vector<Punto*> b){
-	return 0.01;
+	float maxD = distance(a[0],b[0]);
+	for (size_t i = 0; i < a.size(); i++){
+		float d = distance(a[i],b[i]);
+		if (d > maxD)
+			maxD = d;
+	}
+	return maxD;
+}
+
+int KMeans::_centroideMasCercano(Punto* punto){
+	float minD = distance(centroides[0],punto);
+	int cent =  0;
+	for (size_t i = 0; i < centroides.size() ; i++){
+		float d = distance(centroides[i],punto);
+		if (d < minD){
+			minD = d;
+			cent = i;
+		}
+	}
+	return (int)cent;
+}
+
+void KMeans::_recalcularCentroides(vector<Punto*> puntos){
+	vector<int> centDePunto;
+	for (int i = 0; i < (int)puntos.size(); i++){
+		centDePunto.push_back( _centroideMasCercano(puntos[i]) );
+	}
+
+	for (int i = 0; i < (int)centroides.size(); i++){
+		//Si se cuenta el centroide para el promedio  empieza en 1
+		int cantidad = 1;
+		float sumX = centroides[i]->x;
+		float sumY = centroides[i]->y;
+
+		for (int j = 0; j < (int)centDePunto.size(); j++){
+			//Centroide i => el Punto j esta en el cluster i
+			if (centDePunto[j] == i){
+				sumX += puntos[j]->x;
+				sumY += puntos[j]->y;
+				cantidad++;
+			}
+
+		}
+
+		//Nueva pos del centroide
+		centroides[i]->x = sumX/cantidad;
+		centroides[i]->y = sumY/cantidad;
+
+	}
+
 }
 
 void KMeans::fit(vector<Punto*> puntos){
@@ -75,17 +135,25 @@ void KMeans::fit(vector<Punto*> puntos){
 	_initCentroides(puntos);
 
 	for (int i = 0; i < max_iterations; i++){
-		/*
 		//Clono los centroides (hago Back UP)
-		vector<Punto*> centroides_bak = new vector(centroides);
-		labels, inertia = _labels_inertia(X, x_squared_norms, centers);
+		vector<Punto*> centroides_bak;
+		for (int x = 0; x < (int)centroides.size(); x++){
+			Punto* p = new Punto{centroides[x]->x, centroides[x]->y};
+			centroides_bak.push_back(p);
+		}
 
-		centroides = _k_means._centers_dense(puntos, labels, n_clusters, distances)
+		_recalcularCentroides(puntos);
 
-		float shift = _squared_norm(centroides_bak,centroides)
+
+		float shift = _squared_norm(centroides_bak,centroides);
 		if (shift <= max_tolerancia)
 			break;
-		*/
+
+		//Elimino el vector BAK (Libero memoria)
+		//for (size_t j = 0; j < centroides_bak.size(); i++){
+		//	delete centroides_bak[j];
+		//}
+		//centroides.clear();
 	}
 }
 
@@ -97,6 +165,10 @@ void KMeans::viewCentroides(){
 	for (int x = 0; x < (int)centroides.size(); x++){
 		printf( "Centroide %i = (%Lf,%Lf) \n",x+1, centroides[x]->x, centroides[x]->y);
 	}
+}
+
+int KMeans::predict(Punto* punto){
+	return _centroideMasCercano(punto);
 }
 
 KMeans::~KMeans() {

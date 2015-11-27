@@ -12,6 +12,7 @@
 #include <cmath>
 #include <stdlib.h>
 #include <stdio.h>
+#include <algorithm>
 
 
 
@@ -30,14 +31,18 @@ private:
 	float max_tolerancia;
 	vector<Punto*> centroides;
 
-	void _initCentroides (vector<Punto*> puntos);
+	void _initCentroides(vector<Punto*> puntos);
+	int _centroideMasCercano(Punto* punto);
+	void _recalcularCentroides(vector<Punto*> puntos);
 
 public:
-	KMeans( int clusters ,int max_iter, float tolerancia );
+	KMeans( int clusters ,int max_iter = 300, float tolerancia = 0.00001 );
+
 	void fit( vector<Punto*> puntos);
 	int predict( Punto* punto );
 
 	void viewCentroides();
+
 	virtual ~KMeans();
 };
 
