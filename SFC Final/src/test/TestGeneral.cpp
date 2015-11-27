@@ -2,7 +2,6 @@
 
 void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 
-	//leemos el train
 	cout << "leemos el train..  " ;
 	lectorCSV CSVparser("puntos.csv");
 	vector< vector<string> > train = CSVparser.devolverLineas();
@@ -72,4 +71,23 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	}
 
 	cout << endl << "Efectividad: %" << ok*100.0/cantidad_test << " ...." << endl;
+
+
+	for(size_t i = 0;i < puntos.size(); i++){
+		delete puntos[i];
+	}
+
+
+	delete train_red;
+	delete test;
+	delete clf;
+	delete puntos;
+	delete kmeans;
+	delete ft;
+	delete test_procesado;
+	delete categorias;
+	delete train_procesado;
+	delete resultado;
+	delete test_categorias;
+	delete CSVparser;
 }

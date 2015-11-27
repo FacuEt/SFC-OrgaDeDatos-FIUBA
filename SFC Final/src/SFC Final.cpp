@@ -15,40 +15,66 @@
 using namespace std;
 
 int main() {
-	testParser();
+	testGeneral();
 	/*
-		//leemos el train
-		lectorCSV CSVparser("train.csv");
-		vector< vector<string> > train = CSVparser.devolverLineas();
-		int cantidad_de_categorias = 32;
+	cout << "leemos el train..  " ;
+	lectorCSV CSVparser("puntos.csv");
+	vector< vector<string> > train = CSVparser.devolverLineas();
+	cout << "OK.." << endl;
 
-		GaussianNaiveBayes* clf = new GaussianNaiveBayes(cantidad_de_categorias);
+	int cantidad_de_categorias = 32;
 
-		//creamos las feactures para entrenar
+	cout << "Creamos el clasificador... ";
+	GaussianNaiveBayes* clf = new GaussianNaiveBayes(cantidad_de_categorias);
+	cout << " OK.." << endl;
 
-		//Entrenamos Kmeans
-		Kmeans* kmeans = new Kmeans(CANT_CENTROIDES);
+	cout << "Creamos Kmeans..";
+	KMeans* kmeans = new KMeans(CANT_CENTROIDES);
+	cout << "  OK.." << endl;
 
-		//procesamos features
+	cout << "Entrenamos Kmeans..";
+	vector<Punto*> puntos;
+	for (size_t i = 0; i < train.size(); i++ ){
+		long double x = stold( train[i][POS_X] );
+		long double y = stold( train[i][POS_Y] );
+		puntos.push_back( new Punto{x,y} );
+	}
+	kmeans->fit(puntos);
+	cout << "  OK.." << endl;
 
-		features * ft = new features(kmeans);
+	cout << "Creamos el procesador de features..";
+	features * ft = new features(kmeans);
+	cout << "  OK.." << endl;
 
-		vector<vector<long double> > train_procesado = ft->transform_feacture(train);
-		vector<int> categorias = ft->transform_categories(train);
+	cout << "procesando features..";
+	vector<vector<long double> > train_procesado = ft->transform_feacture(train);
+	vector<int> categorias = ft->transform_categories(train);
+	cout << "  OK.." << endl;
 
-		//entrenamos
-		clf->fit(train_procesado,categorias);
-
-		//cargamos test
-		lectorCSV CSVparser("test.csv");
-
-
-		//creamos las feactures para testear
-
-		for (cada linea del test)
-		 vector a guardar = clf->predict(linea_test);
+	cout << "Entrenando clasificador..";
+	clf->fit(train_procesado,categorias);
+	cout << "  OK.." << endl;
 
 
-		*/
+	cout << "leemos el test..  " ;
+	lectorCSV CSVparser2("test.csv");
+	vector< vector<string> > test = CSVparser2.devolverLineas();
+	cout << "OK.." << endl;
+
+	cout << "procesando test..";
+	vector<vector<long double> > test_procesado = ft->transform_feacture(test,true);
+	cout << "OK.." << endl;
+
+	cout << "Prediciendo los test..";
+	vector<int> resultado;
+	for (size_t i = 0; i < test_procesado.size();i++){
+		resultado.push_back(clf->predict_category(test_procesado[i]));
+	}
+	cout << "  OK.." << endl;
+
+	cout << "Generando submission.csv ...." << endl;
+
+	cout << endl << "OK....!" << endl << " FinishHim ...." << endl;
+	*/
 }
 
