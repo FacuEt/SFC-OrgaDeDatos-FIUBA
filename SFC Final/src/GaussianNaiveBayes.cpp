@@ -64,26 +64,6 @@ bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
 		return false;
 	}
 
-
-	///TODO: sacar esto.. solo para testear
-	/*
-	cout << "Media.." << endl;
-	for (size_t i=0;i< media.size();i++){
-		cout << "Categoria.. " << i << endl;
-		for (int j = 0; j< cant_features;j++){
-			cout << "FT " << j << " | " << media[i][j] << endl;
-		}
-	}
-
-	cout << "Variaza.." << endl;
-	for (size_t i=0;i< varianza.size();i++){
-		cout << "Categoria.. " << i << endl;
-		for (size_t j = 0; j< varianza[i].size();j++){
-			cout << "FT " << j << " | " << varianza[i][j] << endl;
-		}
-	}
-
-	*/
 	return true;
 }
 

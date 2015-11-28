@@ -170,7 +170,12 @@ vector<int> features::transform_categories(vector<vector<string> > X){
 }
 
 features::~features() {
-	// TODO Auto-generated destructor stub
+	categorias.clear();
+	delete categorias();
+	DayOfWeek.clear();
+	delete DayOfWeek;
+	District.clear();
+	delete District;
 }
 
 } /* namespace std */
