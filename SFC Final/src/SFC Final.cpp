@@ -106,6 +106,7 @@ void generarSubmission(){
 	cout << "Generando CSV...";
 	lectorCSV* submission = new lectorCSV("datos/sumbission" + getTimeNow() + ".csv");
 	submission->generarArchivoCSV(predicciones);
+	cout << OK << endl;
 
 	/* Memoria chicas, memoria */
 }
