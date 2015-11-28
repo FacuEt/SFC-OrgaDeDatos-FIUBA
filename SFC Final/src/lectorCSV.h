@@ -29,7 +29,7 @@ public:
 	string devolverNombreArchivo();
 	vector<vector<string>> devolverLineas();
 	void levantarArchivo();
-	void generarArchivoCSV(vector<vector<long double>> vector_probas, string nombreArchivoParaGuardar);
+	void generarArchivoCSV(vector<vector<long double>> vector_probas);
 	vector<string> devolverHeader();
 	vector<int> procesarFecha(string fechaParaProcesar);
 	void separarHeader();

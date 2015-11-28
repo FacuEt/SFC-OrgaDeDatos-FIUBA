@@ -26,7 +26,7 @@ void testBasicoCincoPuntos(){
 	delete clf;
 }
 
-void testConCSV(){
+void testConCSV(bool debug){
 	cout << "Prueba 2 | Prueba con datos reales" << endl;
 
 	lectorCSV* CSVparser =  new lectorCSV("datos/puntos.csv");
@@ -39,20 +39,32 @@ void testConCSV(){
 	printf("fit de %d puntos (puntos.csv)\n", (int)lineas.size());
 	printf("Ejemplo lineaCargadas ");
 	cout << lineas[0][0] << ", " << lineas[0][1] << endl;
-	for (int i = 0; i < (int)lineas.size(); i++ ){
-		long double x = stold( lineas[i][0] );
-		long double y = stold( lineas[i][1] );
+	for (int i = 1; i < (int)lineas.size(); i++ ){
+		long double x = stold( lineas[i][7] );
+		long double y = stold( lineas[i][8] );
 		puntos.push_back( new Punto{x,y} );
 	}
 
-	KMeans* clf = new KMeans(300);
+	KMeans* clf = new KMeans(50);
+
+	time_t start,end;
+
+	time (&start);
 
 	cout << "Entrenando puntos" << endl;
+	if (debug)
+		clf->activarDebug();
+
 	clf->fit(puntos);
-	cout << "Entrenado..." << endl;
+
+	time (&end);
+
+	double dif = difftime (end,start);
+
+	cout << "OK | time:" << dif << " segundos" << endl;
 
 
-	clf->viewCentroides();
+	//clf->viewCentroides();
 
 	for (size_t i = 0; i < puntos.size(); i++){
 		delete puntos[i];
@@ -65,7 +77,10 @@ void testConCSV(){
 
 void testKMeans(){
 	testBasicoCincoPuntos();
-	testConCSV();
+	cout << "Prueba KMeans guardando los puntos en map";
+	testConCSV(true);
+	//cout << "Prueba KMeans sin guardar los puntos en map";
+	//testConCSV(true);
 
 
 }

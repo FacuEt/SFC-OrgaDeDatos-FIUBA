@@ -5,7 +5,6 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	//cantidad_test = 20 (Extraidos del Train)
 	//cant_centroides = 300
 
-	string OK = "\033[1;32mOK\033[0m";
 	cout << "\033[1;31mTest General\033[0m" << endl;
 
 	printf("Cargando train (%s)...",TRAIN);

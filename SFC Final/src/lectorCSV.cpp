@@ -98,14 +98,16 @@ vector<int> lectorCSV::procesarFecha(string fechaParaProcesar){
 	return fechaProcesada;
 }
 
-void lectorCSV::generarArchivoCSV(vector<vector<long double>> vector_probas,string nombreArchivoParaGuardar){
+void lectorCSV::generarArchivoCSV(vector<vector<long double>> vector_probas){
+	//Para correr este metodo tenes que tener una instancia de lectorCSV entonces el nombre se lo pasamaos cuando creamos la isntancia
+
 	string headerDelArchivo = "Id,ARSON,ASSAULT,BAD CHECKS,BRIBERY,BURGLARY,DISORDERLY CONDUCT,DRIVING UNDER THE INFLUENCE,DRUG/NARCOTIC,DRUNKENNESS,EMBEZZLEMENT,EXTORTION,FAMILY OFFENSES,FORGERY/COUNTERFEITING,FRAUD,GAMBLING,KIDNAPPING,LARCENY/THEFT,LIQUOR LAWS,LOITERING,MISSING PERSON,NON-CRIMINAL,OTHER OFFENSES,PORNOGRAPHY/OBSCENE MAT,PROSTITUTION,RECOVERED VEHICLE,ROBBERY,RUNAWAY,SECONDARY CODES,SEX OFFENSES FORCIBLE,SEX OFFENSES NON FORCIBLE,STOLEN PROPERTY,SUICIDE,SUSPICIOUS OCC,TREA,TRESPASS,VANDALISM,VEHICLE THEFT,WARRANTS,WEAPON LAWS";
 	ofstream outputFile;
 	string lineaDeArchivo;
-	outputFile.open(nombreArchivoParaGuardar.c_str());
+	outputFile.open(nombrearch.c_str());
 	outputFile << headerDelArchivo << endl;
 	for (size_t i = 0; i < vector_probas.size();i++){
-		lineaDeArchivo = to_string(i+1) + ",";
+		lineaDeArchivo = to_string(i) + ",";
 		for (size_t j = 0; j< vector_probas[i].size();j++){
 				lineaDeArchivo += to_string(vector_probas[i][j]);
 				if (j < (vector_probas[i].size()-1)) lineaDeArchivo += ",";

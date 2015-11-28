@@ -13,13 +13,19 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <time.h>
+
 #include "../lectorCSV.h"
 #include "../GaussianNaiveBayes.h"
 #include "../features.h"
 #include "../KMeans.h"
+
 using namespace std;
 
 #define TRAIN "datos/train_FIX.csv"
+#define TEST "datos/test.csv"
+#define OK "\033[1;32mOK\033[0m"
+
 
 void testNaiveBayes();
 void testKMeans();

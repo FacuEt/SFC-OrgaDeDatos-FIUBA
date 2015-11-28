@@ -84,7 +84,9 @@ long double features::_procesarDistrict(string district){
 long double features::_procesarXY(string X,string Y){
 	if (kmeans == NULL) return 1.0;
 	Punto* punto = new Punto{ stold(X), stold(Y)};
-	return double(kmeans->predict(punto));
+	int clusteMasCercano = kmeans->predict(punto);
+	delete punto;
+	return double(clusteMasCercano);
 }
 
 vector<long double> features::_procesarDate(string fechaParaProcesar){
@@ -127,7 +129,8 @@ vector<vector<long double> > features::transform_feacture(vector<vector<string> 
 	vector<vector<long double> >resultado;
 
 	if (!Test){
-		//Row del TRAIN
+		printf("es el Train\n");
+		//See le Row del TRAIN
 		for(size_t i=0; i< X.size();i++){
 			//por cada linea
 			vector<long double> linea;
@@ -147,19 +150,19 @@ vector<vector<long double> > features::transform_feacture(vector<vector<string> 
 
 		return resultado;
 	}
-
+	printf("es el Test\n");
 	//Se lee un Row del TEST
 	for(size_t i=0; i< X.size();i++){
+		printf("row-features del test: %d\n",(int)i);
 		//por cada linea
 		vector<long double> linea;
 
 		vector<long double> date = _procesarDate(X[i][POS_tDATE]);
 		for(size_t j = 0; i < date.size(); j++){
 			linea.push_back(date[j]);
-			cout << date[j] << endl ;
 		}
 
-		linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
+		linea.push_back(_procesarDayOfWeek(X[i][POS_tDAYOFWEEK]));
 		linea.push_back(_procesarDistrict(X[i][POS_tDISTRICT]));
 		//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
 		linea.push_back(_procesarXY(X[i][POS_tX],X[i][POS_tY]));
