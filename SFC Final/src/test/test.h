@@ -19,10 +19,12 @@
 #include "../KMeans.h"
 using namespace std;
 
+#define TRAIN "datos/train_FIX.csv"
+
 void testNaiveBayes();
 void testKMeans();
 void testParser();
-void testGeneral(int cantidad_datos = 0,int cantidad_test = 0, int cant_centroides = 300);
+void testGeneral(int cantidad_datos = 0,int cantidad_test = 200, int cant_centroides = 5);
 
 #endif /* TESTNAIVEBAYES_H_ */
 

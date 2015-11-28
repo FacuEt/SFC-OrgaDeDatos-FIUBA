@@ -132,6 +132,10 @@ void KMeans::_recalcularCentroides(vector<Punto*> puntos){
 
 }
 
+void KMeans::activarDebug(){
+	debug = true;
+}
+
 void KMeans::fit(vector<Punto*> puntos){
 	if ((int)puntos.size() <= nro_clusters){
 		printf("ERROR: Imposible hacer KMeans, agrega mas datos o reduce el numero de clusters");
@@ -158,6 +162,8 @@ void KMeans::fit(vector<Punto*> puntos){
 
 		float shift = _squared_norm(centroides_bak,centroides);
 		if (shift <= max_tolerancia){
+			if (debug)
+				printf("KMeans [INFO]: Convergio");
 			for (int i = 0; i < (int)centroides_bak.size(); i++){
 				delete centroides_bak[i];
 			}

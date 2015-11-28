@@ -42,6 +42,8 @@ public:
 	void fit( vector<Punto*> puntos);
 	int predict( Punto* punto );
 
+	void activarDebug();
+
 	void viewCentroides();
 
 	virtual ~KMeans();

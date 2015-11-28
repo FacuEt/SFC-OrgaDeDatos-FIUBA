@@ -83,7 +83,7 @@ long double features::_procesarDistrict(string district){
 
 long double features::_procesarXY(string X,string Y){
 	if (kmeans == NULL) return 1.0;
-	Punto* punto = new Punto{stod(X),stod(Y)};
+	Punto* punto = new Punto{ stold(X), stold(Y)};
 	return double(kmeans->predict(punto));
 }
 
@@ -116,13 +116,16 @@ vector<long double> features::_procesarDate(string date){
 }
 
 vector<vector<long double> > features::transform_feacture(vector<vector<string> > X, bool Test){
+	//Si test es True se leen rows del archivo test (para kaggle)
 	vector<vector<long double> >resultado;
 
 	if (!Test){
+		//Row del TRAIN
 		for(size_t i=0; i< X.size();i++){
 			//por cada linea
 			vector<long double> linea;
 
+			//Fecha en columnas diferentes
 			vector<long double> date = _procesarDate(X[i][POS_DATE]);
 			for(size_t j = 0; i < date.size(); j++){
 				linea.push_back(date[j]);
@@ -135,26 +138,27 @@ vector<vector<long double> > features::transform_feacture(vector<vector<string> 
 
 			resultado.push_back(linea);
 		}
+
+		return resultado;
 	}
 
-	else{
-		for(size_t i=0; i< X.size();i++){
-			//por cada linea
-			vector<long double> linea;
+	//Se lee un Row del TEST
+	for(size_t i=0; i< X.size();i++){
+		//por cada linea
+		vector<long double> linea;
 
-			vector<long double> date = _procesarDate(X[i][POS_tDATE]);
-			for(size_t j = 0; i < date.size(); j++){
-				linea.push_back(date[j]);
-				cout << date[j] << endl ;
-			}
-
-			linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
-			linea.push_back(_procesarDistrict(X[i][POS_tDISTRICT]));
-			//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
-			linea.push_back(_procesarXY(X[i][POS_tX],X[i][POS_tY]));
-
-			resultado.push_back(linea);
+		vector<long double> date = _procesarDate(X[i][POS_tDATE]);
+		for(size_t j = 0; i < date.size(); j++){
+			linea.push_back(date[j]);
+			cout << date[j] << endl ;
 		}
+
+		linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
+		linea.push_back(_procesarDistrict(X[i][POS_tDISTRICT]));
+		//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
+		linea.push_back(_procesarXY(X[i][POS_tX],X[i][POS_tY]));
+
+		resultado.push_back(linea);
 	}
 	return resultado;
 }

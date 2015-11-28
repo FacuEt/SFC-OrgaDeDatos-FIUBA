@@ -45,7 +45,7 @@ void testConCSV(){
 		puntos.push_back( new Punto{x,y} );
 	}
 
-	KMeans* clf = new KMeans(100);
+	KMeans* clf = new KMeans(300);
 
 	cout << "Entrenando puntos" << endl;
 	clf->fit(puntos);

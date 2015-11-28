@@ -1,67 +1,98 @@
 #include "test.h"
 
 void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
+	//cantidad_datos = 0 (Todos)
+	//cantidad_test = 20 (Extraidos del Train)
+	//cant_centroides = 300
 
-	cout << "leemos el train..  " ;
-	lectorCSV CSVparser("puntos.csv");
-	vector< vector<string> > train = CSVparser.devolverLineas();
-	cout << "OK.." << endl;
+	string OK = "\033[1;32mOK\033[0m";
+	cout << "\033[1;31mTest General\033[0m" << endl;
 
-	cout << "reducimos el train.. tomaremos " << cantidad_datos << " datos y " << cantidad_test << " test..  ";
-	vector< vector<string> >::const_iterator first = train.begin();
-	vector< vector<string> >::const_iterator last = train.begin() + cantidad_datos;
+	printf("Cargando train (%s)...",TRAIN);
+
+	lectorCSV* csvReader = new lectorCSV("datos/train_FIX.csv");
+	vector< vector<string> > train = csvReader->devolverLineas();
+	if (!train.size()){
+		cout << "Error: No se pudieron cargar datos" << endl;
+		return;
+	}
+	cout << OK << endl;
+
+
+
+	//Pongo el 1 para sacar el header
+	vector< vector<string> >::const_iterator first = train.begin() + 1;
+	vector< vector<string> >::const_iterator last;
+	if (cantidad_datos){
+		cout << "[INFO] Reducimos el Train | tomaremos " << cantidad_datos << " datos (continuo) y " << cantidad_test << " test (random)" << endl;
+		last = train.begin() + cantidad_datos;
+	} else {
+		cout << "[INFO] Se utilizaran todos los rows del train (menos los " << cantidad_test << " utilizados para test)" << endl;
+		last = train.end();
+	}
 	vector< vector<string> > train_red(first, last);
-	cout << " OK.." << endl;
 
-	cout << " Generamos los test del train...";
-	int random = rand() % train.size();
-	vector< vector<string> >::const_iterator first_t = train.begin() + random;
-	vector< vector<string> >::const_iterator last_t = train.begin() + random + cantidad_test;
-	vector< vector<string> > test(first_t, last_t);
-	cout << " OK.." << endl;
+
+
+	cout << "Generamos tests con rows del train (posiciones randoms)...";
+	vector< vector<string> > test;
+	for (int job = 0; job < cantidad_test; job++ ){
+		int random = rand() % train.size();
+		//printf("	test nro %d -> train[%d]\n",job,random);
+		//Agrego el row random del train al test
+		test.push_back( train[random] );
+		//Extraigo la posicion random del train
+		train.erase( train.begin() + random );
+
+	}
+	cout << OK << endl;
 
 	int cantidad_de_categorias = 32;
 
-	cout << "Creamos el clasificador... ";
+	cout << "Creamos el clasificador....";
 	GaussianNaiveBayes* clf = new GaussianNaiveBayes(cantidad_de_categorias);
-	cout << " OK.." << endl;
+	cout << OK << endl;
 
-	cout << "Creamos Kmeans..";
+	cout << "Creamos Kmeans...";
 	KMeans* kmeans = new KMeans(cant_centroides);
-	cout << "  OK.." << endl;
+	cout << OK << endl;
 
-	cout << "Entrenamos Kmeans..";
+	cout << "Entrenamos Kmeans...";
+	/* Estaria bueno usar puntos.csv (ya estan filtrado los puntos que se repiten) */
 	vector<Punto*> puntos;
 	for (size_t i = 0; i < train_red.size(); i++ ){
 		long double x = stold( train_red[i][POS_X] );
 		long double y = stold( train_red[i][POS_Y] );
 		puntos.push_back( new Punto{x,y} );
 	}
+	//kmeans->activarDebug();cout << endl ;
 	kmeans->fit(puntos);
-	cout << "  OK.." << endl;
+	cout << OK << endl;
 
-	cout << "Creamos el procesador de features..";
-	features * ft = new features(kmeans);
-	cout << "  OK.." << endl;
+	cout << "Creamos el procesador de features...";
+	features* ft = new features(kmeans);
+	cout << OK << endl;
 
-	cout << "procesando features..";
-	vector<vector<long double> > train_procesado = ft->transform_feacture(train);
-	vector<int> categorias = ft->transform_categories(train);
+	cout << "Procesando features..." << endl;
+	vector<vector<long double> > train_procesado = ft->transform_feacture(train_red);
+	cout << "Procesando features2..." << endl;
+	vector<int> categorias = ft->transform_categories(train_red);
+	cout << "Procesando features3..." << endl;
 	vector<vector<long double> > test_procesado = ft->transform_feacture(test,false);
-	cout << "  OK.." << endl;
+	cout << OK << endl;
 
-	cout << "Entrenando clasificador..";
+	cout << "Entrenando clasificador...";
 	clf->fit(train_procesado,categorias);
-	cout << "  OK.." << endl;
+	cout << OK << endl;
 
-	cout << "Prediciendo los test..";
+	cout << "Prediciendo los test...";
 	vector<int> resultado;
 	for (size_t i = 0; i < test_procesado.size();i++){
 		resultado.push_back(clf->predict_category(test_procesado[i]));
 	}
-	cout << "  OK.." << endl;
+	cout << OK << endl;
 
-	cout << "Calculando efectividad...." << endl;
+	cout << "Calculando efectividad..." << endl;
 	vector<int> test_categorias = ft->transform_categories(test);
 	int ok,error = 0;
 	for (size_t i = 0; i < resultado.size();i++){
@@ -72,7 +103,7 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 
 	cout << endl << "Efectividad: %" << ok*100.0/cantidad_test << " ...." << endl;
 
-
+	/* Todavia no me importa la memoria
 	for(size_t i = 0;i < puntos.size(); i++){
 		delete puntos[i];
 	}
@@ -90,4 +121,5 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	delete resultado;
 	delete test_categorias;
 	delete CSVparser;
+	*/
 }
