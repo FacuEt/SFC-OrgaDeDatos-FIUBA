@@ -87,32 +87,39 @@ long double features::_procesarXY(string X,string Y){
 	return double(kmeans->predict(punto));
 }
 
-vector<long double> features::_procesarDate(string date){
-	vector<long double> fecha;
-	/*
-	INFOS:
-		-FORMATO: ANIO-MES-DIA HS:MIN:SG
-		-RANGO ANIOS = (2015,2003)
-		-SG es siempre 00
-
-	*/
-	string aux;
-	for ( string::iterator it=date.begin(); it!=date.end(); ++it){
-
-		//anio-mes-dia
-		if (strcmp(&*it,"-") || strcmp(&*it," ")){
-			fecha.push_back(stod(aux));
-			aux.clear();
-		}
-		else if (strcmp(&*it,":")){
-			fecha.push_back(stod(aux));
-			break;
-		}
-
-		aux.push_back(*it);
+vector<long double> features::_procesarDate(string fechaParaProcesar){
+	vector<long double> fechaProcesada;
+	//1er parametro dice que se suprime. 2do parametro los char que muestra
+	//3er parametro si muestro o no casos en donde aparece por ej ,, eso tiraria
+	//un str vacio
+	char_separator<char> sep{" "};
+	char_separator<char> sep_primer{"-"};
+	char_separator<char> sep_segundo{":"};
+	Tokenizadorfecha tok{fechaParaProcesar,sep};
+	vector<string> fechaTrabajada;
+	vector<string> fechaParseada; //2015-11-27 15:38:27
+	string primeraParte; //2015-11-27
+	string segundaParte; // 15:38:27
+	for (const auto &t : tok){
+		fechaParseada.push_back(t);
+	}
+	vector<string>::iterator it = fechaParseada.begin();
+	primeraParte = *it;
+	++it;
+	segundaParte = *it;
+	Tokenizadorfecha tok2{primeraParte,sep_primer};
+	for (const auto &t : tok2){
+		fechaTrabajada.push_back(t); // 2015 , 11 , 27
+	}
+	Tokenizadorfecha tok3{segundaParte,sep_segundo};
+	for (const auto &t : tok3){
+		fechaTrabajada.push_back(t); // 2015 , 11 , 27 , 15 , 38 , 27
 	}
 
-	return fecha;
+	for (int i = 0; i < 4; i++){
+		fechaProcesada.push_back(atoi(fechaTrabajada[i].c_str()));
+	}
+	return fechaProcesada;
 }
 
 vector<vector<long double> > features::transform_feacture(vector<vector<string> > X, bool Test){
@@ -127,10 +134,9 @@ vector<vector<long double> > features::transform_feacture(vector<vector<string> 
 
 			//Fecha en columnas diferentes
 			vector<long double> date = _procesarDate(X[i][POS_DATE]);
-			for(size_t j = 0; i < date.size(); j++){
+			for(size_t j = 0; j < date.size(); j++){
 				linea.push_back(date[j]);
 			}
-
 			linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
 			linea.push_back(_procesarDistrict(X[i][POS_DISTRICT]));
 			//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));

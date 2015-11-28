@@ -163,7 +163,7 @@ void KMeans::fit(vector<Punto*> puntos){
 		float shift = _squared_norm(centroides_bak,centroides);
 		if (shift <= max_tolerancia){
 			if (debug)
-				printf("KMeans [INFO]: Convergio");
+				printf("KMeans [INFO]: Convergio\n");
 			for (int i = 0; i < (int)centroides_bak.size(); i++){
 				delete centroides_bak[i];
 			}

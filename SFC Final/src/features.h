@@ -13,6 +13,7 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+#include <boost/tokenizer.hpp>
 #include "KMeans.h"
 
 //train
@@ -35,7 +36,12 @@
 #define POS_tX 5
 #define POS_tY 6
 
-namespace std {
+namespace std{
+
+using namespace boost;
+
+typedef tokenizer<char_separator<char> > Tokenizadorfecha;
+typedef tokenizer<escaped_list_separator<char> > Tokenizador;
 
 class features {
 private:
@@ -57,6 +63,6 @@ public:
 	virtual ~features();
 };
 
-} /* namespace std */
+}
 
 #endif /* FEATURES_H_ */

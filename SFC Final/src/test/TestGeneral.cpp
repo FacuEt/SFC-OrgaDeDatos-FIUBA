@@ -47,14 +47,14 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	}
 	cout << OK << endl;
 
-	int cantidad_de_categorias = 32;
+	int cantidad_de_categorias = 39;
 
 	cout << "Creamos el clasificador....";
 	GaussianNaiveBayes* clf = new GaussianNaiveBayes(cantidad_de_categorias);
 	cout << OK << endl;
 
 	cout << "Creamos Kmeans...";
-	KMeans* kmeans = new KMeans(cant_centroides);
+	KMeans* kmeans = new KMeans(100);//cant_centroides);
 	cout << OK << endl;
 
 	cout << "Entrenamos Kmeans...";
@@ -65,7 +65,7 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 		long double y = stold( train_red[i][POS_Y] );
 		puntos.push_back( new Punto{x,y} );
 	}
-	//kmeans->activarDebug();cout << endl ;
+	cout << endl ;kmeans->activarDebug();cout << endl ;
 	kmeans->fit(puntos);
 	cout << OK << endl;
 
@@ -73,11 +73,15 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	features* ft = new features(kmeans);
 	cout << OK << endl;
 
-	cout << "Procesando features..." << endl;
+	cout << "Procesando features [TRANSFORM]...";
 	vector<vector<long double> > train_procesado = ft->transform_feacture(train_red);
-	cout << "Procesando features2..." << endl;
+	cout << OK << endl;
+
+	cout << "Procesando features [CATEGORIAS]...";
 	vector<int> categorias = ft->transform_categories(train_red);
-	cout << "Procesando features3..." << endl;
+	cout << OK << endl;
+
+	cout << "Procesando features [TEST]...";
 	vector<vector<long double> > test_procesado = ft->transform_feacture(test,false);
 	cout << OK << endl;
 
@@ -92,16 +96,16 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	}
 	cout << OK << endl;
 
-	cout << "Calculando efectividad..." << endl;
+
 	vector<int> test_categorias = ft->transform_categories(test);
-	int ok,error = 0;
+	int ok = 0;
+	int error = 0;
 	for (size_t i = 0; i < resultado.size();i++){
 		if(test_categorias[i] == resultado[i])
 			ok++;
 		else error++;
 	}
-
-	cout << endl << "Efectividad: %" << ok*100.0/cantidad_test << " ...." << endl;
+	cout << endl << "Efectividad: %" << ok*100.0/(int)test.size() << endl;
 
 	/* Todavia no me importa la memoria
 	for(size_t i = 0;i < puntos.size(); i++){

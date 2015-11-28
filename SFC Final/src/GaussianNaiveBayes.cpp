@@ -41,7 +41,8 @@ bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
 				//por cada columna
 
 				media[category][j] += X[i][j];
-
+				//printf("varianza[category(%d)][j(%d)]\n",category,j);
+				//printf("varianza.size() = %d | varianza[category].size() = %d\n",(int)varianza.size(),(int)varianza[category].size());
 				varianza[category][j] += pow(X[i][j],2);
 
 			}
