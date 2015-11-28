@@ -124,6 +124,12 @@ vector<long double> features::_procesarDate(string fechaParaProcesar){
 	return fechaProcesada;
 }
 
+long double features::_procesarAdress(string adress){
+	size_t of = adress.find(" of ");
+	if (of != string::npos) return 1.0;
+	else return 0.0;
+}
+
 vector<vector<long double> > features::transform_feacture(vector<vector<string> > X, bool Test){
 	//Si test es True se leen rows del archivo test (para kaggle)
 	vector<vector<long double> >resultado;
@@ -138,9 +144,10 @@ vector<vector<long double> > features::transform_feacture(vector<vector<string> 
 			for(size_t j = 0; j < date.size(); j++){
 				linea.push_back(date[j]);
 			}
+			date.clear();
 			linea.push_back(_procesarDayOfWeek(X[i][POS_tDAYOFWEEK]));
 			linea.push_back(_procesarDistrict(X[i][POS_tDISTRICT]));
-			//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));;
+			linea.push_back(_procesarAdress(X[i][POS_tADRESS]));;
 			linea.push_back(_procesarXY(X[i][POS_tX],X[i][POS_tY]));
 
 		} else {
@@ -149,9 +156,10 @@ vector<vector<long double> > features::transform_feacture(vector<vector<string> 
 			for(size_t j = 0; j < date.size(); j++){
 				linea.push_back(date[j]);
 			}
+			date.clear();
 			linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
 			linea.push_back(_procesarDistrict(X[i][POS_DISTRICT]));
-			//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
+			linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
 			linea.push_back(_procesarXY(X[i][POS_X],X[i][POS_Y]));
 		}
 		resultado.push_back(linea);
@@ -171,11 +179,8 @@ vector<int> features::transform_categories(vector<vector<string> > X){
 
 features::~features() {
 	categorias.clear();
-	delete categorias();
 	DayOfWeek.clear();
-	delete DayOfWeek;
 	District.clear();
-	delete District;
 }
 
 } /* namespace std */

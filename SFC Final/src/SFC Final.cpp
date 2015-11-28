@@ -116,7 +116,8 @@ void generarSubmission(){
 }
 
 int main(int argc, char** argv) {
-	generarSubmission();
+	//generarSubmission();
+	testGeneral(0,20,20);
 	return 0;
 }
 

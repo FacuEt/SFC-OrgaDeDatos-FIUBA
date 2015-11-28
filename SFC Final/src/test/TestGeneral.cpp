@@ -53,7 +53,7 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	cout << OK << endl;
 
 	cout << "Creamos Kmeans...";
-	KMeans* kmeans = new KMeans(100);//cant_centroides);
+	KMeans* kmeans = new KMeans(cant_centroides);//cant_centroides);
 	cout << OK << endl;
 
 	cout << "Entrenamos Kmeans...";
@@ -66,6 +66,10 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	}
 	cout << endl ;kmeans->activarDebug();cout << endl ;
 	kmeans->fit(puntos);
+	for (size_t i = 0; i < puntos.size(); i++ ){
+		delete puntos[i];
+	}
+	puntos.clear();
 	cout << OK << endl;
 
 	cout << "Creamos el procesador de features...";
@@ -88,6 +92,7 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	clf->fit(train_procesado,categorias);
 	cout << OK << endl;
 
+	/*
 	cout << "Prediciendo los test...";
 	vector<int> resultado;
 	for (size_t i = 0; i < test_procesado.size();i++){
@@ -95,15 +100,52 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	}
 	cout << OK << endl;
 
-
 	vector<int> test_categorias = ft->transform_categories(test);
 	int ok = 0;
 	int error = 0;
 	for (size_t i = 0; i < resultado.size();i++){
 		if(test_categorias[i] == resultado[i])
 			ok++;
-		else error++;
+		else {
+			error++;
+
+
+		}
 	}
+	*/
+
+	cout << "Prediciendo los test...";
+	vector<vector<long double> > resultado;
+	for (size_t i = 0; i < test_procesado.size();i++){
+		resultado.push_back(clf->predict(test_procesado[i]));
+	}
+	cout << OK << endl;
+
+	vector<int> test_categorias = ft->transform_categories(test);
+	int ok = 0;
+	int error = 0;
+	for (size_t i = 0; i < resultado.size();i++){
+		int prediccion;
+		long double max = 0;
+		for (size_t j = 0;j < resultado[i].size();j++){
+			if (resultado[i][j] > max){
+				max = resultado[i][j];
+				prediccion = j;
+			}
+		}
+		if(test_categorias[i] == prediccion)
+			ok++;
+		else {
+			error++;
+			cout << "Categoria correcta: " << test_categorias[i] << endl;
+			cout << "categoria predecida: " << prediccion << endl;
+			for (size_t j = 0;j < resultado[i].size();j++){
+				cout << "cat: " << j << "pred: " << resultado[i][j] << " ";
+			}
+			cout << endl;
+		}
+	}
+
 	cout << endl << "Efectividad: %" << ok*100.0/(int)test.size() << endl;
 
 	/* Todavia no me importa la memoria
