@@ -105,7 +105,7 @@ void lectorCSV::generarArchivoCSV(vector<vector<long double>> vector_probas,stri
 	outputFile.open(nombreArchivoParaGuardar.c_str());
 	outputFile << headerDelArchivo << endl;
 	for (size_t i = 0; i < vector_probas.size();i++){
-		lineaDeArchivo = to_string(i) + ",";
+		lineaDeArchivo = to_string(i+1) + ",";
 		for (size_t j = 0; j< vector_probas[i].size();j++){
 				lineaDeArchivo += to_string(vector_probas[i][j]);
 				if (j < (vector_probas[i].size()-1)) lineaDeArchivo += ",";
