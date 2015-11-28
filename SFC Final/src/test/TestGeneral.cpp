@@ -85,7 +85,7 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	cout << OK << endl;
 
 	cout << "Procesando features [TEST]...";
-	vector<vector<long double> > test_procesado = ft->transform_feacture(test,false);
+	vector<vector<long double> > test_procesado = ft->transform_feacture(test);
 	cout << OK << endl;
 
 	cout << "Entrenando clasificador...";
@@ -125,12 +125,13 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	int ok = 0;
 	int error = 0;
 	for (size_t i = 0; i < resultado.size();i++){
-		int prediccion;
+		int prediccion = - 1;
 		long double max = 0;
-		for (size_t j = 0;j < resultado[i].size();j++){
-			if (resultado[i][j] > max){
-				max = resultado[i][j];
-				prediccion = j;
+		vector<long double> resultados_i = resultado[i];
+		for (size_t j = 0;j < resultados_i.size();j++){
+			if (resultados_i[j] > max){
+				max = resultados_i[j];
+				prediccion = (int)j;
 			}
 		}
 		if(test_categorias[i] == prediccion)
@@ -138,9 +139,9 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 		else {
 			error++;
 			cout << "Categoria correcta: " << test_categorias[i] << endl;
-			cout << "categoria predecida: " << prediccion << endl;
+			cout << "Categoria predecida: " << prediccion << endl;
 			for (size_t j = 0;j < resultado[i].size();j++){
-				cout << "cat: " << j << "pred: " << resultado[i][j] << " ";
+				cout << " cat: " << j << " | pred: " << resultado[i][j] << " ";
 			}
 			cout << endl;
 		}

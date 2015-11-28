@@ -9,7 +9,7 @@
 #include <ctime>
 #include "test/test.h"
 
-#define CANT_CENTROIDES 20
+#define CANT_CENTROIDES 300
 
 using namespace std;
 
@@ -65,16 +65,19 @@ void generarSubmission(){
 	KMeans* kmeans = new KMeans(CANT_CENTROIDES);
 	cout << OK << endl;
 
-	cout << "Entrenamos Kmeans...";
-	/* Estaria bueno usar puntos.csv (ya estan filtrado los puntos que se repiten) */
+
+	lectorCSV* CSVparser =  new lectorCSV("datos/puntos.csv");
+	cout << "Cargando puntos del CSV (datos/puntos.csv)..";
+	vector<vector<string> > lineas = CSVparser->devolverLineas();
+	cout<< OK << endl << "Entrenamos Kmeans (" << lineas.size() << " puntos)...";
 	vector<Punto*> puntos;
-	for (size_t i = 0; i < train.size(); i++ ){
-		long double x = stold( train[i][POS_X] );
-		long double y = stold( train[i][POS_Y] );
+	for (int i = 1; i < (int)lineas.size(); i++ ){
+		long double x = stold( lineas[i][0] );
+		long double y = stold( lineas[i][1] );
 		puntos.push_back( new Punto{x,y} );
 	}
 	//Muestre el proceso de KMeans
-	//cout << endl ;kmeans->activarDebug();cout << endl ;
+	cout << endl ;kmeans->activarDebug();cout << endl ;
 	kmeans->fit(puntos);
 	cout << OK << endl;
 
@@ -94,7 +97,7 @@ void generarSubmission(){
 	vector<vector<long double> > test_procesado = ft->transform_feacture(test,true);
 	cout << OK << endl;
 
-	cout << "Test procesado :" << test_procesado.size() << endl;
+	cout << "Tests procesados:" << test_procesado.size() << endl;
 
 	cout << "Entrenando clasificador...";
 	clf->fit(train_procesado,categorias);
@@ -108,16 +111,58 @@ void generarSubmission(){
 	cout << OK << endl;
 
 	cout << "Generando CSV con " << predicciones.size() + 1  <<" rows" << "...";
-	lectorCSV* submission = new lectorCSV("datos/sumbission" + getTimeNow() + ".csv");
+	lectorCSV* submission = new lectorCSV("datos/submission" + getTimeNow() + ".csv");
 	submission->generarArchivoCSV(predicciones);
 	cout << OK << endl;
 
 	/* Memoria chicas, memoria */
 }
 
+void help(){
+	printf("SAN FRANCISCO CRIME CLASSIFICATION\n\n");
+	printf(" -general [n_cluster] [n_train] [n_test]:\n");
+	printf("	Correr test de integracion y calcula efectividad\n");
+	printf("		default n_cluster: 	20\n");
+	printf("		default n_datos: 	0 	(Todos)\n");
+	printf("		default n_test: 	20 (test extraidos del train)\n");
+	printf(" -kmean: 	Correr pruebas de KMeans\n");
+	printf(" -sub: 		Generar submission para Kaggle\n");
+	printf(" -bayes: 	Correr pruebas de Naive Bayes\n");
+	printf(" -help: 	Mostrar ayudas\n");
+	printf(" -parser: 	Correr pruebas de Parser CSV\n");
+	printf("\nDEFAULT -> Correr test de integracion y calcular efectividad \n");
+}
+
 int main(int argc, char** argv) {
-	//generarSubmission();
-	testGeneral(0,20,20);
+	//Si no hay comandos se corre la prueba general
+	if (argc == 1){
+		testGeneral();
+		return 0;
+	}
+
+
+	string parametro = string(argv[1]);
+	if (parametro == "-sub"){
+		generarSubmission();
+	} else if (parametro == "-kmean"){
+		testKMeans();
+	} else if (parametro == "-bayes"){
+		testNaiveBayes();
+	} else if (parametro == "-parser"){
+		testParser();
+	} else if (parametro == "-help"){
+		help();
+	} else if (parametro == "-general"){
+		int cantidadDeCluster = (argc > 1) ? stoi( string(argv[2]) ) : 20;
+		int cantidadDeDatos = (argc > 2) ? stoi( string(argv[3]) ) : 0;
+		int cantidadDeTest = (argc > 3) ? stoi( string(argv[4]) ) : 20;
+		testGeneral(cantidadDeDatos,cantidadDeTest,cantidadDeCluster);
+	} else {
+		printf("****Error en parametro*** [AYUDA]:\n");
+		help();
+	}
+
+
 	return 0;
 }
 

@@ -99,6 +99,7 @@ vector<long double> GaussianNaiveBayes::predict(vector<long double>  X){
 		prob = prob/evidencia;
 
 		resultados[i] = prob;
+		cout << prob << endl;
 	}
 
 	return resultados;

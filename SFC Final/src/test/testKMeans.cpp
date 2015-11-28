@@ -40,8 +40,8 @@ void testConCSV(bool debug){
 	printf("Ejemplo lineaCargadas ");
 	cout << lineas[0][0] << ", " << lineas[0][1] << endl;
 	for (int i = 1; i < (int)lineas.size(); i++ ){
-		long double x = stold( lineas[i][7] );
-		long double y = stold( lineas[i][8] );
+		long double x = stold( lineas[i][0] );
+		long double y = stold( lineas[i][1] );
 		puntos.push_back( new Punto{x,y} );
 	}
 
