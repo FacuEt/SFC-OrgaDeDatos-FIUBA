@@ -53,6 +53,8 @@ void generarSubmission(){
 	test.erase(test.begin());
 	//Recordae que test[0] es el HEADER
 
+	cout << "ultimo id:" << test[test.size() - 1][0] << " Size total: " << test.size() << endl;
+
 	int cantidad_de_categorias = 39;
 
 	cout << "Creamos el clasificador....";
@@ -92,18 +94,20 @@ void generarSubmission(){
 	vector<vector<long double> > test_procesado = ft->transform_feacture(test,true);
 	cout << OK << endl;
 
+	cout << "Test procesado :" << test_procesado.size() << endl;
+
 	cout << "Entrenando clasificador...";
 	clf->fit(train_procesado,categorias);
 	cout << OK << endl;
 
 	cout << "Prediciendo los test...";
 	vector< vector<long double> > predicciones;
-	for (size_t i = 1; i < test_procesado.size();i++){
+	for (size_t i = 0; i < test_procesado.size();i++){
 		predicciones.push_back( clf->predict(test_procesado[i]) );
 	}
 	cout << OK << endl;
 
-	cout << "Generando CSV...";
+	cout << "Generando CSV con " << predicciones.size() + 1  <<" rows" << "...";
 	lectorCSV* submission = new lectorCSV("datos/sumbission" + getTimeNow() + ".csv");
 	submission->generarArchivoCSV(predicciones);
 	cout << OK << endl;
@@ -111,7 +115,8 @@ void generarSubmission(){
 	/* Memoria chicas, memoria */
 }
 
-int main() {
+int main(int argc, char** argv) {
 	generarSubmission();
+	return 0;
 }
 

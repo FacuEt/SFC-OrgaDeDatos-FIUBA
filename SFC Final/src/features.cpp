@@ -128,13 +128,23 @@ vector<vector<long double> > features::transform_feacture(vector<vector<string> 
 	//Si test es True se leen rows del archivo test (para kaggle)
 	vector<vector<long double> >resultado;
 
-	if (!Test){
-		//See le Row del TRAIN
-		for(size_t i=0; i< X.size();i++){
-			//por cada linea
-			vector<long double> linea;
+	for(size_t i=0; i < X.size(); i++){
+		//por cada linea
+		vector<long double> linea;
 
-			//Fecha en columnas diferentes
+		if (Test){
+			//Se lee un Row del TEST
+			vector<long double> date = _procesarDate(X[i][POS_tDATE]);
+			for(size_t j = 0; j < date.size(); j++){
+				linea.push_back(date[j]);
+			}
+			linea.push_back(_procesarDayOfWeek(X[i][POS_tDAYOFWEEK]));
+			linea.push_back(_procesarDistrict(X[i][POS_tDISTRICT]));
+			//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));;
+			linea.push_back(_procesarXY(X[i][POS_tX],X[i][POS_tY]));
+
+		} else {
+			//See le Row del TRAIN
 			vector<long double> date = _procesarDate(X[i][POS_DATE]);
 			for(size_t j = 0; j < date.size(); j++){
 				linea.push_back(date[j]);
@@ -143,25 +153,7 @@ vector<vector<long double> > features::transform_feacture(vector<vector<string> 
 			linea.push_back(_procesarDistrict(X[i][POS_DISTRICT]));
 			//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
 			linea.push_back(_procesarXY(X[i][POS_X],X[i][POS_Y]));
-
-			resultado.push_back(linea);
 		}
-
-		return resultado;
-	}
-	//Se lee un Row del TEST
-	for(size_t i=0; i< X.size();i++){
-		//por cada linea
-		vector<long double> linea;
-		vector<long double> date = _procesarDate(X[i][POS_tDATE]);
-		for(size_t j = 0; j < date.size(); j++){
-			linea.push_back(date[j]);
-		}
-		linea.push_back(_procesarDayOfWeek(X[i][POS_tDAYOFWEEK]));
-		linea.push_back(_procesarDistrict(X[i][POS_tDISTRICT]));
-		//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));;
-		linea.push_back(_procesarXY(X[i][POS_tX],X[i][POS_tY]));
-
 		resultado.push_back(linea);
 	}
 	return resultado;
