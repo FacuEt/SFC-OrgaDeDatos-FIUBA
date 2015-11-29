@@ -53,23 +53,29 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	cout << OK << endl;
 
 	cout << "Creamos Kmeans...";
-	KMeans* kmeans = new KMeans(cant_centroides);//cant_centroides);
+	KMeans* kmeans = new KMeans(cant_centroides);
 	cout << OK << endl;
 
 	cout << "Entrenamos Kmeans...";
-	/* Estaria bueno usar puntos.csv (ya estan filtrado los puntos que se repiten) */
+	lectorCSV* CSVparser =  new lectorCSV("datos/puntos.csv");
+	cout << "Cargando puntos del CSV (datos/puntos.csv)..";
+	vector<vector<string> > lineas = CSVparser->devolverLineas();
+	cout<< OK << endl << "Entrenamos Kmeans (" << lineas.size() << " puntos)...";
+	vector<Punto*> puntos;
+	for (int i = 1; i < (int)lineas.size(); i++ ){
+		long double x = stold( lineas[i][0] );
+		long double y = stold( lineas[i][1] );
+		puntos.push_back( new Punto{x,y} );
+	}
+	/* Estaria bueno usar puntos.csv (ya estan filtrado los puntos que se repiten)
 	vector<Punto*> puntos;
 	for (size_t i = 0; i < train_red.size(); i++ ){
 		long double x = stold( train_red[i][POS_X] );
 		long double y = stold( train_red[i][POS_Y] );
 		puntos.push_back( new Punto{x,y} );
-	}
+	}*/
 	cout << endl ;kmeans->activarDebug();cout << endl ;
 	kmeans->fit(puntos);
-	for (size_t i = 0; i < puntos.size(); i++ ){
-		delete puntos[i];
-	}
-	puntos.clear();
 	cout << OK << endl;
 
 	cout << "Creamos el procesador de features...";
@@ -85,14 +91,13 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	cout << OK << endl;
 
 	cout << "Procesando features [TEST]...";
-	vector<vector<long double> > test_procesado = ft->transform_feacture(test);
+	vector<vector<long double> > test_procesado = ft->transform_feacture(test,false);
 	cout << OK << endl;
 
 	cout << "Entrenando clasificador...";
 	clf->fit(train_procesado,categorias);
 	cout << OK << endl;
 
-	/*
 	cout << "Prediciendo los test...";
 	vector<int> resultado;
 	for (size_t i = 0; i < test_procesado.size();i++){
@@ -100,53 +105,15 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	}
 	cout << OK << endl;
 
+
 	vector<int> test_categorias = ft->transform_categories(test);
 	int ok = 0;
 	int error = 0;
 	for (size_t i = 0; i < resultado.size();i++){
 		if(test_categorias[i] == resultado[i])
 			ok++;
-		else {
-			error++;
-
-
-		}
+		else error++;
 	}
-	*/
-
-	cout << "Prediciendo los test...";
-	vector<vector<long double> > resultado;
-	for (size_t i = 0; i < test_procesado.size();i++){
-		resultado.push_back(clf->predict(test_procesado[i]));
-	}
-	cout << OK << endl;
-
-	vector<int> test_categorias = ft->transform_categories(test);
-	int ok = 0;
-	int error = 0;
-	for (size_t i = 0; i < resultado.size();i++){
-		int prediccion = - 1;
-		long double max = 0;
-		vector<long double> resultados_i = resultado[i];
-		for (size_t j = 0;j < resultados_i.size();j++){
-			if (resultados_i[j] > max){
-				max = resultados_i[j];
-				prediccion = (int)j;
-			}
-		}
-		if(test_categorias[i] == prediccion)
-			ok++;
-		else {
-			error++;
-			cout << "Categoria correcta: " << test_categorias[i] << endl;
-			cout << "Categoria predecida: " << prediccion << endl;
-			for (size_t j = 0;j < resultado[i].size();j++){
-				cout << " cat: " << j << " | pred: " << resultado[i][j] << " ";
-			}
-			cout << endl;
-		}
-	}
-
 	cout << endl << "Efectividad: %" << ok*100.0/(int)test.size() << endl;
 
 	/* Todavia no me importa la memoria
