@@ -41,8 +41,6 @@ bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
 				//por cada columna
 
 				media[category][j] += X[i][j];
-				//printf("varianza[category(%d)][j(%d)]\n",category,j);
-				//printf("varianza.size() = %d | varianza[category].size() = %d\n",(int)varianza.size(),(int)varianza[category].size());
 				varianza[category][j] += pow(X[i][j],2);
 
 			}
@@ -65,7 +63,7 @@ bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
 	}
 
 
-	///TODO: sacar esto.. solo para testear
+	//sacar esto.. solo para testear
 	/*
 	cout << "Media.." << endl;
 	for (size_t i=0;i< media.size();i++){
@@ -91,7 +89,13 @@ bool GaussianNaiveBayes::fit(vector<vector<long double> > X,vector<int> Y){
 long double GaussianNaiveBayes::_calculoGaussiano(int categoria, int feacture, long double new_ft){
 	long double res = 0;
 
-	res = (1/sqrt(2*M_PI*varianza[categoria][feacture]))*exp( -pow((new_ft - media[categoria][feacture] ),2)/(2*varianza[categoria][feacture]));
+	if (varianza[categoria][feacture] == 0){
+		if (new_ft - media[categoria][feacture] == 0)
+			res = 1;
+	}
+	else{
+		res = (1/sqrt(2*M_PI*varianza[categoria][feacture]))*exp( -pow((new_ft - media[categoria][feacture] ),2)/(2*varianza[categoria][feacture]));
+	}
 
 	return res;
 }

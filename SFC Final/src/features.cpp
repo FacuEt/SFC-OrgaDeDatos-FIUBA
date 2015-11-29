@@ -146,7 +146,7 @@ vector<vector<long double> > features::transform_feacture(vector<vector<string> 
 			}
 			linea.push_back(_procesarDayOfWeek(X[i][POS_tDAYOFWEEK]));
 			linea.push_back(_procesarDistrict(X[i][POS_tDISTRICT]));
-			//linea.push_back(_procesarAdress(X[i][POS_tADRESS]));;
+			linea.push_back(_procesarAdress(X[i][POS_tADRESS]));;
 			linea.push_back(_procesarXY(X[i][POS_tX],X[i][POS_tY]));
 		} else {
 			//See le Row del TRAIN
@@ -156,7 +156,7 @@ vector<vector<long double> > features::transform_feacture(vector<vector<string> 
 			}
 			linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
 			linea.push_back(_procesarDistrict(X[i][POS_DISTRICT]));
-			//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
+			linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
 			linea.push_back(_procesarXY(X[i][POS_X],X[i][POS_Y]));
 		}
 		resultado.push_back(linea);
