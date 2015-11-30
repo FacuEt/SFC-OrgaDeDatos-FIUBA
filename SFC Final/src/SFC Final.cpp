@@ -9,7 +9,7 @@
 #include <ctime>
 #include "test/test.h"
 
-#define CANT_CENTROIDES 300
+#define CANT_CENTROIDES 20
 
 using namespace std;
 
