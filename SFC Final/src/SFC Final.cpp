@@ -53,8 +53,6 @@ void generarSubmission(){
 	test.erase(test.begin());
 	//Recordae que test[0] es el HEADER
 
-	cout << "ultimo id:" << test[test.size() - 1][0] << " Size total: " << test.size() << endl;
-
 	int cantidad_de_categorias = 39;
 
 	cout << "Creamos el clasificador....";
@@ -69,7 +67,7 @@ void generarSubmission(){
 	lectorCSV* CSVparser =  new lectorCSV(PUNTOS_PROCESADOS);
 	cout << "Cargando puntos del CSV (" << PUNTOS_PROCESADOS << "...";
 	vector<vector<string> > lineas = CSVparser->devolverLineas();
-	cout<< OK << endl << "Entrenamos Kmeans (" << lineas.size() << " puntos)...";
+	cout<< OK << endl << "[INFO] Entrenamos Kmeans con " << lineas.size() << " puntos...";
 	vector<Punto*> puntos;
 	for (int i = 1; i < (int)lineas.size(); i++ ){
 		long double x = stold( lineas[i][0] );
@@ -97,7 +95,7 @@ void generarSubmission(){
 	vector<vector<long double> > test_procesado = ft->transformFeature(test,true);
 	cout << OK << endl;
 
-	cout << "Tests procesados:" << test_procesado.size() << endl;
+	cout << "[INFO] Tests procesados (a predecir):" << test_procesado.size() << endl;
 
 	cout << "Entrenando clasificador...";
 	clf->fit(train_procesado,categorias);
