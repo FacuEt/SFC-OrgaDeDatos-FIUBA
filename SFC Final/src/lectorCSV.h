@@ -16,6 +16,7 @@
 #include <iterator>
 
 #include <boost/tokenizer.hpp>
+#include <boost/algorithm/string.hpp>;
 using namespace std;
 using namespace boost;
 typedef tokenizer<escaped_list_separator<char> > Tokenizador;
@@ -33,6 +34,8 @@ public:
 	vector<string> devolverHeader();
 	vector<int> procesarFecha(string fechaParaProcesar);
 	void separarHeader();
+	vector<string> procesarAddressEnString(string adress);
+
 private:
 	string nombrearch;
 	ifstream archivocsv;

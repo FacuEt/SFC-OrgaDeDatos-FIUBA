@@ -150,6 +150,8 @@ int main(int argc, char** argv) {
 		testNaiveBayes();
 	} else if (parametro == "-parser"){
 		testParser();
+	} else if (parametro == "-percep"){
+		testPerceptron();
 	} else if (parametro == "-help"){
 		help();
 	} else if (parametro == "-general"){

@@ -31,6 +31,7 @@ void testNaiveBayes();
 void testKMeans();
 void testParser();
 void testGeneral(int cantidad_datos = 0,int cantidad_test = 20, int cant_centroides = 20);
+void testPerceptron();
 
 #endif /* TESTNAIVEBAYES_H_ */
 

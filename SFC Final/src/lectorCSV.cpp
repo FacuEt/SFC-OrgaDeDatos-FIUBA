@@ -114,7 +114,35 @@ void lectorCSV::generarArchivoCSV(vector<vector<long double>> vector_probas){
 		}
 		outputFile << lineaDeArchivo << endl;
 	}
+	outputFile.close();
 }
+vector<string> lectorCSV::procesarAddressEnString(string addressAProcesar){
+
+	char_separator<char> sepBlock{" "};
+	char_separator<char> sepCorner{"/"};
+	Tokenizadorfecha tokenizadorCalle{addressAProcesar,sepBlock};
+	Tokenizadorfecha tokenizadorCorner{addressAProcesar,sepCorner};
+	string calle1,calle2;
+	vector<string> addressParaDevolver;
+	size_t of = addressAProcesar.find(" of ");
+		if (of != string::npos){ //es una sola calle con altura
+			Tokenizadorfecha::iterator it = tokenizadorCalle.begin(); //esto me indicaria toda la bola del num y eso
+			++it; // ahora estoy parado en el nombre propiamente dicho
+			++it;
+			++it;
+			addressParaDevolver.push_back(*it);
+			++it;
+			addressParaDevolver[0] += *it;
+			}
+		else{ //calle1 / calle 2
+			for (const auto &t : tokenizadorCorner){
+				string a = t.c_str();
+				erase_all(a," ");
+				addressParaDevolver.push_back(a); //addressParaDevolver[0]=calle1,addressParaDevolver[1]= calle2
+			}
+		}
+	return addressParaDevolver;
+	}
 
 lectorCSV::~lectorCSV()
 {
