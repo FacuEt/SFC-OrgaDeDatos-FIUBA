@@ -162,12 +162,12 @@ vector<vector<long double> > features::transformFeature(vector<vector<string> > 
 				linea.push_back(date[j]);
 			}
 			//Fue de noche o de dia
-			linea.push_back(_esDeNoche( date[3] ));
+			//linea.push_back(_esDeNoche( date[3] ));
 
 			//Dia de la semana
 			linea.push_back(_procesarDayOfWeek(X[i][POS_tDAYOFWEEK]));
 			//Fue fin de semana
-			linea.push_back(_procesarDayOfWeek(X[i][POS_tDAYOFWEEK]));
+			//linea.push_back(_esFinDeSemana(_procesarDayOfWeek(X[i][POS_tDAYOFWEEK])));
 
 			linea.push_back(_procesarDistrict(X[i][POS_tDISTRICT]));
 			//linea.push_back(_procesarAdress(X[i][POS_tADRESS]));;
@@ -179,12 +179,12 @@ vector<vector<long double> > features::transformFeature(vector<vector<string> > 
 				linea.push_back(date[j]);
 			}
 			//Fue de noche o de dia
-			linea.push_back(_esDeNoche( date[3] ));
+			//linea.push_back(_esDeNoche( date[3] ));
 
 			//Dia de la semana
 			linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
 			//Fue fin de semana
-			linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
+			//linea.push_back(_esFinDeSemana(_procesarDayOfWeek(X[i][POS_DAYOFWEEK])));
 
 			linea.push_back(_procesarDistrict(X[i][POS_DISTRICT]));
 			//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
