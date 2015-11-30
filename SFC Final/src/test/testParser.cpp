@@ -7,7 +7,7 @@ void testParser(){
 	X.push_back(linea);
 
 	features* ft = new features(NULL);
-	vector<vector<long double> > feat = ft->transform_feacture(X);
+	vector<vector<long double> > feat = ft->transformFeature(X);
 	vector<int> cat = ft->transform_categories(X);
 
 	for(size_t i = 0;i < feat[0].size();i++){

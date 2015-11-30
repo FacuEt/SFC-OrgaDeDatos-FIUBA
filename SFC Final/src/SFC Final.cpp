@@ -66,8 +66,8 @@ void generarSubmission(){
 	cout << OK << endl;
 
 
-	lectorCSV* CSVparser =  new lectorCSV("datos/puntos.csv");
-	cout << "Cargando puntos del CSV (datos/puntos.csv)..";
+	lectorCSV* CSVparser =  new lectorCSV(PUNTOS_PROCESADOS);
+	cout << "Cargando puntos del CSV (" << PUNTOS_PROCESADOS << "...";
 	vector<vector<string> > lineas = CSVparser->devolverLineas();
 	cout<< OK << endl << "Entrenamos Kmeans (" << lineas.size() << " puntos)...";
 	vector<Punto*> puntos;
@@ -86,7 +86,7 @@ void generarSubmission(){
 	cout << OK << endl;
 
 	cout << "Procesando features [TRANSFORM]...";
-	vector<vector<long double> > train_procesado = ft->transform_feacture(train);
+	vector<vector<long double> > train_procesado = ft->transformFeature(train);
 	cout << OK << endl;
 
 	cout << "Procesando features [CATEGORIAS]...";
@@ -94,7 +94,7 @@ void generarSubmission(){
 	cout << OK << endl;
 
 	cout << "Procesando features [TEST]...";
-	vector<vector<long double> > test_procesado = ft->transform_feacture(test,true);
+	vector<vector<long double> > test_procesado = ft->transformFeature(test,true);
 	cout << OK << endl;
 
 	cout << "Tests procesados:" << test_procesado.size() << endl;
@@ -130,13 +130,13 @@ void help(){
 	printf(" -bayes: 	Correr pruebas de Naive Bayes\n");
 	printf(" -help: 	Mostrar ayudas\n");
 	printf(" -parser: 	Correr pruebas de Parser CSV\n");
-	printf("\nDEFAULT -> Correr test de integracion y calcular efectividad \n");
+	printf("\nDEFAULT (Sin parametros) -> Correr test de integracion (configuracion default) y calcular efectividad \n");
 }
 
 int main(int argc, char** argv) {
 	//Si no hay comandos se corre la prueba general
 	if (argc == 1){
-		testGeneral();
+		testGeneral(0,20,20,true);
 		return 0;
 	}
 
@@ -158,7 +158,8 @@ int main(int argc, char** argv) {
 		int cantidadDeCluster = (argc > 1) ? stoi( string(argv[2]) ) : 20;
 		int cantidadDeDatos = (argc > 2) ? stoi( string(argv[3]) ) : 0;
 		int cantidadDeTest = (argc > 3) ? stoi( string(argv[4]) ) : 20;
-		testGeneral(cantidadDeDatos,cantidadDeTest,cantidadDeCluster);
+		bool conPuntos = (argc > 4) ? (string(argv[5]) == "true") ? true : false : true;
+		testGeneral(cantidadDeDatos,cantidadDeTest,cantidadDeCluster,conPuntos);
 	} else {
 		printf("****Error en parametro*** [AYUDA]:\n");
 		help();

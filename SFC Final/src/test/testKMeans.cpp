@@ -1,5 +1,8 @@
 #include "test.h"
 
+#define DEBUG true
+
+
 void testBasicoCincoPuntos(){
 	cout << "Prueba 1 | Simple con 5 puntos" << endl;
 	Punto* p1 = new Punto{1,5};
@@ -26,22 +29,26 @@ void testBasicoCincoPuntos(){
 	delete clf;
 }
 
-void testConCSV(bool debug){
+void testConCSV(bool dePuntosProcesados){
 	cout << "Prueba 2 | Prueba con datos reales" << endl;
 
-	lectorCSV* CSVparser =  new lectorCSV("datos/puntos.csv");
-	cout << "Cargando lineas del CSV" << endl;
+	string FileToLoad = (dePuntosProcesados) ? PUNTOS_PROCESADOS : TRAIN;
+
+	lectorCSV* CSVparser =  new lectorCSV(FileToLoad);
+	cout << "Cargando lineas del CSV (" << FileToLoad << ")..." << endl;
 	vector<vector<string> > lineas = CSVparser->devolverLineas();
 	cout << "Lineas cargadas" << endl;
 
 	vector<Punto*> puntos;
 
-	printf("fit de %d puntos (puntos.csv)\n", (int)lineas.size());
-	printf("Ejemplo lineaCargadas ");
-	cout << lineas[0][0] << ", " << lineas[0][1] << endl;
+	printf("Fit de %d puntos...", (int)lineas.size());
+
+	int columnX = (dePuntosProcesados) ? 0 : POS_X;
+	int columnY = (dePuntosProcesados) ? 0 : POS_Y;
+
 	for (int i = 1; i < (int)lineas.size(); i++ ){
-		long double x = stold( lineas[i][0] );
-		long double y = stold( lineas[i][1] );
+		long double x = stold( lineas[i][columnX] );
+		long double y = stold( lineas[i][columnY] );
 		puntos.push_back( new Punto{x,y} );
 	}
 
@@ -52,7 +59,7 @@ void testConCSV(bool debug){
 	time (&start);
 
 	cout << "Entrenando puntos" << endl;
-	if (debug)
+	if (DEBUG)
 		clf->activarDebug();
 
 	clf->fit(puntos);
@@ -63,13 +70,10 @@ void testConCSV(bool debug){
 
 	cout << "OK | time:" << dif << " segundos" << endl;
 
+	cout << "Centroides Generados:" << endl;
+	clf->viewCentroides();
 
-	//clf->viewCentroides();
-
-	for (size_t i = 0; i < puntos.size(); i++){
-		delete puntos[i];
-	}
-	puntos.clear();
+	//delete []puntos;
 	delete clf;
 	delete CSVparser;
 
@@ -79,8 +83,6 @@ void testKMeans(){
 	testBasicoCincoPuntos();
 	cout << "Prueba KMeans guardando los puntos en map";
 	testConCSV(true);
-	//cout << "Prueba KMeans sin guardar los puntos en map";
-	//testConCSV(true);
 
 
 }

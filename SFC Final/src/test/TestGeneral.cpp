@@ -1,15 +1,21 @@
 #include "test.h"
 
-void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
+void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides, bool kmeanConPuntosProcesados){
 	//cantidad_datos = 0 (Todos)
 	//cantidad_test = 20 (Extraidos del Train)
 	//cant_centroides = 300
 
 	cout << "\033[1;31mTest General\033[0m" << endl;
+	string msg = (cantidad_datos == 0) ? "todos" : to_string(cantidad_datos);
+	cout << "[INFO] Se utilizaran " << msg << " los datos del TRAIN." << endl;
+	cout << "[INFO] Se testeara con " << cantidad_test << " rows del TRAIN (No seran utilizadas para entrenar)" << endl;
+	cout << "[INFO] Se entrenara KMEANS con " << cant_centroides << " centroides" << endl;
+	string msh_km = (kmeanConPuntosProcesados) ? "archivo que tiene los puntos procesados (elimina repetidos)" : "train";
+	cout << "[INFO] Kmeans usara los puntos del " << msh_km << endl;
 
 	printf("Cargando train (%s)...",TRAIN);
 
-	lectorCSV* csvReader = new lectorCSV("datos/train_FIX.csv");
+	lectorCSV* csvReader = new lectorCSV(TRAIN);
 	vector< vector<string> > train = csvReader->devolverLineas();
 	if (!train.size()){
 		cout << "Error: No se pudieron cargar datos" << endl;
@@ -57,23 +63,26 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	cout << OK << endl;
 
 	cout << "Entrenamos Kmeans...";
-	lectorCSV* CSVparser =  new lectorCSV("datos/puntos.csv");
-	cout << "Cargando puntos del CSV (datos/puntos.csv)..";
-	vector<vector<string> > lineas = CSVparser->devolverLineas();
-	cout<< OK << endl << "Entrenamos Kmeans (" << lineas.size() << " puntos)...";
+
 	vector<Punto*> puntos;
-	for (int i = 1; i < (int)lineas.size(); i++ ){
-		long double x = stold( lineas[i][0] );
-		long double y = stold( lineas[i][1] );
-		puntos.push_back( new Punto{x,y} );
+	if (kmeanConPuntosProcesados){
+		lectorCSV* CSVparser =  new lectorCSV(PUNTOS_PROCESADOS);
+		cout << "Cargando puntos del CSV ("<< PUNTOS_PROCESADOS << ")..";
+		vector<vector<string> > lineas = CSVparser->devolverLineas();
+		cout<< OK << endl << "Entrenamos Kmeans (" << lineas.size() << " puntos)...";
+
+		for (int i = 1; i < (int)lineas.size(); i++ ){
+			long double x = stold( lineas[i][0] );
+			long double y = stold( lineas[i][1] );
+			puntos.push_back( new Punto{x,y} );
+		}
+	} else {
+		for (int i = 1; i < (int)train.size(); i++ ){
+			long double x = stold( train[i][POS_X] );
+			long double y = stold( train[i][POS_Y] );
+			puntos.push_back( new Punto{x,y} );
+		}
 	}
-	/* Estaria bueno usar puntos.csv (ya estan filtrado los puntos que se repiten)
-	vector<Punto*> puntos;
-	for (size_t i = 0; i < train_red.size(); i++ ){
-		long double x = stold( train_red[i][POS_X] );
-		long double y = stold( train_red[i][POS_Y] );
-		puntos.push_back( new Punto{x,y} );
-	}*/
 	cout << endl ;kmeans->activarDebug();cout << endl ;
 	kmeans->fit(puntos);
 	cout << OK << endl;
@@ -83,7 +92,7 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	cout << OK << endl;
 
 	cout << "Procesando features [TRANSFORM]...";
-	vector<vector<long double> > train_procesado = ft->transform_feacture(train_red);
+	vector<vector<long double> > train_procesado = ft->transformFeature(train_red);
 	cout << OK << endl;
 
 	cout << "Procesando features [CATEGORIAS]...";
@@ -91,7 +100,7 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	cout << OK << endl;
 
 	cout << "Procesando features [TEST]...";
-	vector<vector<long double> > test_procesado = ft->transform_feacture(test,false);
+	vector<vector<long double> > test_procesado = ft->transformFeature(test,false);
 	cout << OK << endl;
 
 	cout << "Entrenando clasificador...";
@@ -112,27 +121,27 @@ void testGeneral(int cantidad_datos,int cantidad_test, int cant_centroides){
 	for (size_t i = 0; i < resultado.size();i++){
 		if(test_categorias[i] == resultado[i])
 			ok++;
-		else error++;
+		else {
+			//Estaria para poner aca las probabilidaes
+			error++;
+		}
 	}
 	cout << endl << "Efectividad: %" << ok*100.0/(int)test.size() << endl;
 
+
 	/* Todavia no me importa la memoria
-	for(size_t i = 0;i < puntos.size(); i++){
-		delete puntos[i];
-	}
-
-
-	delete train_red;
-	delete test;
+	delete[] train_red;
+	delete[] test;
 	delete clf;
-	delete puntos;
+	delete[] puntos;
 	delete kmeans;
 	delete ft;
-	delete test_procesado;
-	delete categorias;
-	delete train_procesado;
-	delete resultado;
-	delete test_categorias;
+	delete[] test_procesado;
+	delete[] categorias;
+	delete[] train_procesado;
+	delete[] resultado;
+	delete[] test_categorias;
 	delete CSVparser;
+	delete csvReader;
 	*/
 }

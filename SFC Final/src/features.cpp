@@ -127,10 +127,27 @@ vector<long double> features::_procesarDate(string fechaParaProcesar){
 long double features::_procesarAdress(string adress){
 	size_t of = adress.find(" of ");
 	if (of != string::npos) return 1.0;
-	else return 0.0;
+	of = adress.find(" OF ");
+	if (of != string::npos) return 1.0;
+	return 0.0;
 }
 
-vector<vector<long double> > features::transform_feacture(vector<vector<string> > X, bool Test){
+long double features::_esFinDeSemana(int Dia){
+	//Retorna 1 si es fin de semana (sabado, domingo) 0 si no lo es
+	if (Dia == DayOfWeek["Saturday"] || Dia == DayOfWeek["Sunday"]){
+		return 1.0;
+	}
+	return 0.0;
+}
+
+long double features::_esDeNoche( int hora ){
+	if (hora > NOCHE_INICIO && hora < NOCHE_FIN){
+		return 1.0;
+	}
+	return 0.0;
+}
+
+vector<vector<long double> > features::transformFeature(vector<vector<string> > X, bool Test){
 	//Si test es True se leen rows del archivo test (para kaggle)
 	vector<vector<long double> >resultado;
 
@@ -144,9 +161,16 @@ vector<vector<long double> > features::transform_feacture(vector<vector<string> 
 			for(size_t j = 0; j < date.size(); j++){
 				linea.push_back(date[j]);
 			}
+			//Fue de noche o de dia
+			linea.push_back(_esDeNoche( date[3] ));
+
+			//Dia de la semana
 			linea.push_back(_procesarDayOfWeek(X[i][POS_tDAYOFWEEK]));
+			//Fue fin de semana
+			linea.push_back(_procesarDayOfWeek(X[i][POS_tDAYOFWEEK]));
+
 			linea.push_back(_procesarDistrict(X[i][POS_tDISTRICT]));
-			linea.push_back(_procesarAdress(X[i][POS_tADRESS]));;
+			//linea.push_back(_procesarAdress(X[i][POS_tADRESS]));;
 			linea.push_back(_procesarXY(X[i][POS_tX],X[i][POS_tY]));
 		} else {
 			//See le Row del TRAIN
@@ -154,9 +178,16 @@ vector<vector<long double> > features::transform_feacture(vector<vector<string> 
 			for(size_t j = 0; j < date.size(); j++){
 				linea.push_back(date[j]);
 			}
+			//Fue de noche o de dia
+			linea.push_back(_esDeNoche( date[3] ));
+
+			//Dia de la semana
 			linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
+			//Fue fin de semana
+			linea.push_back(_procesarDayOfWeek(X[i][POS_DAYOFWEEK]));
+
 			linea.push_back(_procesarDistrict(X[i][POS_DISTRICT]));
-			linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
+			//linea.push_back(_procesarAdress(X[i][POS_ADRESS]));
 			linea.push_back(_procesarXY(X[i][POS_X],X[i][POS_Y]));
 		}
 		resultado.push_back(linea);

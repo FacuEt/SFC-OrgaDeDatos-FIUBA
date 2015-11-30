@@ -36,6 +36,9 @@
 #define POS_tX 5
 #define POS_tY 6
 
+#define NOCHE_INICIO 18
+#define NOCHE_FIN 7
+
 namespace std{
 
 using namespace boost;
@@ -55,10 +58,12 @@ private:
 	long double _procesarDistrict(string district);
 	long double _procesarAdress(string adress);
 	long double _procesarXY(string X,string Y);
+	long double _esDeNoche(int hora);
+	long double _esFinDeSemana(int hora);
 
 public:
 	features(KMeans* un_kmeans);
-	vector<vector<long double> > transform_feacture(vector<vector<string> > X, bool Test = false);
+	vector<vector<long double> > transformFeature(vector<vector<string> > X, bool Test = false);
 	vector<int> transform_categories(vector<vector<string> > X);
 	virtual ~features();
 };

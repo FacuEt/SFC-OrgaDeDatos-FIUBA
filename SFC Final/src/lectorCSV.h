@@ -16,7 +16,7 @@
 #include <iterator>
 
 #include <boost/tokenizer.hpp>
-#include <boost/algorithm/string.hpp>;
+#include <boost/algorithm/string.hpp>
 using namespace std;
 using namespace boost;
 typedef tokenizer<escaped_list_separator<char> > Tokenizador;

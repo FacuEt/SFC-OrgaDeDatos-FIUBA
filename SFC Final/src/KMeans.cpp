@@ -192,7 +192,7 @@ int KMeans::predict(Punto* punto){
 }
 
 KMeans::~KMeans() {
-	for (int i = 0; i < (int)centroides.size(); i++){
+	for (int i = 0; i < (int)centroides.size() ; i++){
 		delete centroides[i];
 	}
 	centroides.clear();
